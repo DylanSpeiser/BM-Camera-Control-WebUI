@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaScript API Test</title>
+    </head>
+    <body onload="onBodyLoad()">
+        <!-- Header -->
+        <header>
+            <h1>JavaScript AJAX API Testing Page</h1>
+            <h3>For Blackmagic Camera Control, by Dylan Speiser</h3>
+            <span><a id="documentationLink" href="#" target="_blank">YAML Documentation</a></span>
+            <span><a id="mediaManagerLink" href="#" target="_blank">Web Media Manager</a></span>
+        </header>
+
+        <br>
+
+        <!-- Request Form -->
+        <form id="requestForm">
+            <!-- Request type radio -->
+            <input type="radio" id="requestTypeGET" value="GET" name="requestType" checked>
+            <label for="requestTypeGET">GET</label>
+            <input type="radio" id="requestTypePUT" value="PUT" name="requestType">
+            <label for="requestTypePUT">PUT</label>
+
+            <!-- Request Endpoint -->
+            <input type="text" id="queryName" value="/system">
+            <input type="text" id="queryBody" value="">
+
+            <!-- Send Request Button -->
+            <button type="button" onclick="sendButtonPressed()">Send Request</button>
+        </form>
+
+        <br>
+
+        <!-- Iris Slider -->
+        <div class="sliderContainer">
+            <p>Iris Control: <span id="currentIrisNumber">8.0</span></p>
+            <span id="irisRangeMinLabel">0.0</span>
+            <input type="range" min="0.0" max="1.0" step="0.001" value="0.5" id="irisRange" onmouseup="irisInputHandler()" ontouchend="irisInputHandler()">
+            <span id="irisRangeMaxLabel">100.0</span>
+        </div>
+
+        <p id="responseTextParagraph">Response should show up here</p>
+
+        <script src="script.js"></script>
+    </body>
+</html>
