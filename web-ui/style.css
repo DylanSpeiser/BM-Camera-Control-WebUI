@@ -1,0 +1,218 @@
+/* Load NotoSansDisplay Font from resources */
+@font-face {
+    font-family: 'NotoSansDisplay';
+    src: url('resources/NotoSansDisplay-VariableFont_wdth\,wght.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+         url('resources/NotoSansDisplay-VariableFont_wdth\,wght.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+
+body {
+    font-family: 'NotoSansDisplay', sans-serif;
+    margin: 0px;
+    overflow: hidden;
+    background: #181818;
+    color: white;
+}
+
+/* Page Body Flexboxes */
+.flexContainerH {
+    display: flex;
+}
+
+.flexContainerV {
+    display: inline-flex;
+}
+
+/* Horizontal Container Styles */
+#headerContainer {
+    background: #181818;
+    background: linear-gradient(0deg, #181818 0%, #303030 100%);
+    border-bottom: 1px solid black;
+    width: 100%;
+    height: 7.77vh;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+#headerContainer h1 {
+    font-weight: 100;
+    color: white;
+    margin-left: 1.3vw;
+}
+
+#cameraSelectContainer {
+    background: #222222;
+    border: 1px solid black;
+    width: 100%;
+    height: 3.53vh;
+}
+
+#allCamerasContainer {
+    width: 100%;
+    height: 83.1vh;
+    
+    overflow-x: scroll;
+    overflow-y: hidden;
+
+    scrollbar-color: #202020 #151515;
+}
+
+#footerContainer {
+    background: #181818;
+    background: linear-gradient(0deg, #181818 0%, #303030 100%);
+    border: 1px solid black;
+    width: 100%;
+    height: 5vh;
+    position: fixed;
+    bottom: 0;
+}
+
+/* Camera Controls Container */
+.cameraControlsContainer {
+    width: 15vw;
+    height: 100%;
+    background: #282828;
+    flex-direction: column;
+    border: 1px solid black;
+    flex-shrink: 0;
+}
+
+.cameraControlsContainer.selectedCam {
+    background: #323232;
+}
+
+.liveCam .cameraControlHeadContainer {
+    background: rgb(184,3,16);
+    background: linear-gradient(90deg, rgba(184,3,16,1) 0%, rgba(255,0,19,1) 15%, rgba(255,0,19,1) 85%, rgba(184,3,16,1) 100%);
+}
+
+.cameraControlHeadContainer {
+    width: 100%;
+    height: 5vh;
+    border-bottom: 2px solid black;
+    align-items: center;
+}
+
+.cameraName {
+    font-weight: 100;
+    color: white;
+    margin-inline-start: 0.6em;
+    margin-inline-end: 0.6em;
+}
+
+/* Color Correction Section */
+.cameraControlColorCorrectionContainer {
+    width: 100%;
+    height: 33vh;
+}
+
+/* Exposure Section */
+.cameraControlExposureContainer {
+    width: 100%;
+    height: 4.4vh;
+    background-color: #171717;
+    border-top: 1px solid #2d2d2d;
+    border-bottom: 1px solid #2d2d2d;
+    display: inline-flex;
+    justify-content: space-evenly;
+    overflow: hidden;
+}
+
+.selectedCam .cameraControlExposureContainer {
+    border-top: 1px solid #3a3a3a;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.ccExposureSettingContainer {
+    display: flex;
+    color: white;
+    font-size: 0.86em;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0.5vh;
+    padding-top: 0.25vh;
+}
+
+.exposureControlLabel {
+    color: #6e6e6e;
+    font-size: 0.666em;
+    display: block;
+}
+
+/* Lens Stuff */
+.cameraControlLensContainer {
+    width: 100%;
+    height: 41.9vh;
+    border-bottom: 1px solid black;
+    justify-content: space-evenly;
+}
+
+.lensSliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lensSliderContainer span {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.lensSliderContainer button {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+input[type=range][orient=vertical] {
+    -webkit-appearance: slider-vertical;
+    width: 2vw;
+    height: 80%;
+}
+
+/* Right side (expanded) */
+.cameraControlsContainerExpanded {
+    width: 84.75vw;
+    height: 100%;
+    background: #282828;
+    flex-direction: column;
+    border: 1px solid black;
+    flex-shrink: 0;
+}
+
+.cameraControlExpandedHeadContainer {
+    width: 100%;
+    height: 5vh;
+    border-bottom: 2px solid black;
+    align-items: center;
+    justify-content: center;
+}
+
+.timecodeLabel {
+    font-weight: 100;
+    color: white;
+    margin-inline-start: 0.6em;
+    margin-inline-end: 0.6em;
+}
+
+/* Connection Settings */
+.connectionContainer {
+    margin: 1.5vw;
+}
+
+input[type=text] {
+    border-radius: 0.5vh;
+    background: rgb(30, 30, 30);
+    color: white;
+    height: 2em;
+    width: 10vw;
+    border: 1px solid rgb(20, 20, 20);
+    margin-left: 1vw;
+    text-align: center;
+    font-family: 'NotoSansDisplay', sans-serif;
+    outline: none;
+}
+
+input[type=text]:focus {
+    border: 1px solid rgb(150, 58, 0);
+}

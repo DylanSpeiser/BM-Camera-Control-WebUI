@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Page title and metadata -->
+        <title>Blackmagic Camera Control WebUI</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="JS-based web interface for controlling Blackmagic Design cameras via the official REST API">
+        <meta name="author" content="Dylan Speiser">
+
+        <!-- Linking the stylesheet -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body onload="bodyOnLoad()">
+        <!-- JavaScript Linking -->
+        <script src="BMD-Camera-Control.js"></script>
+        <script src="web-ui.js"></script>
+
+        <!------ Page Content ------>
+
+        <!-- Header Div -->
+        <div class="flexContainerH" id="headerContainer">
+            <h1>Blackmagic Camera Control WebUI</h1>
+        </div>
+
+        <!-- Camera Select Bar -->
+        <div class="flexContainerH" id="cameraSelectContainer">
+
+        </div>
+
+        <!-- Camera Controls Box -->
+        <div class="flexContainerH" id="allCamerasContainer">
+            <div class="flexContainerV cameraControlsContainer">
+                <div class="flexContainerH cameraControlHeadContainer">
+                    <h2 class="cameraName">CAM1</h2>
+                </div>
+
+                <div class="flexContainerH cameraControlColorCorrectionContainer">
+
+                </div>
+
+                <div class="flexContainerH cameraControlExposureContainer">
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">FILTER</span>
+                        <!-- Add control arrows -->
+                        <span class="ndFilterSpan">0</span>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">GAIN</span>
+                        <!-- Add control arrows -->
+                        <span class="gainSpan">+0db</span>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">SHUTTER</span>
+                        <!-- Add control arrows -->
+                        <span class="shutterSpan">1/50</span>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">BALANCE</span>
+                        <!-- Add control arrows -->
+                        <span class="whiteBalanceSpan">5600K</span>
+                    </div>
+                </div>
+
+                <div class="flexContainerH cameraControlLensContainer">
+                    <div class="lensSliderContainer">
+                        <span>FOCUS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" class="focusRange">
+                        <button onclick="cameras[ci].doAutoFocus()">AF</button>
+                    </div>
+                    <div class="lensSliderContainer">
+                        <span>IRIS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" class="irisRange">
+                        <span class="apertureStopsLabel">X.X</span>
+                    </div>
+                    <div class="lensSliderContainer">
+                        <span>ZOOM</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" class="zoomRange">
+                        <span class="zoomMMLabel">XXmm</span>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="flexContainerV cameraControlsContainerExpanded">
+                    <div class="flexContainerH cameraControlExpandedHeadContainer">
+                        <h2 class="timecodeLabel">TIMECODE</h2>
+                    </div>
+                    <div class="connectionContainer">
+                        <span>Hostname: </span>
+                        <input type="text" value="Studio-Camera-6K-Pro.local" class="hostnameInput" onkeydown="textInputTrigger(this)">
+                        <button onclick='cameras[ci] = new BMDCamera(document.getElementsByClassName("hostnameInput")[ci].value,ci);'>Connect</button>
+                    </div>
+            </div>
+            
+        </div>
+
+        <!-- Footer Div -->
+        <div class="flexContainerH" id="footerContainer">
+            <button onclick="cameras.forEach((element) => {element.refresh()});">Refresh</button>
+        </div>
+    </body>
+</html>
