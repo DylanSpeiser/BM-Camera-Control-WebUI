@@ -45,6 +45,10 @@ To view files on the drives of your camera, follow the link in the bottom-right 
 The page allows for the sending of manual API calls to the camera. Use the text boxes to do that, after consulting the documentation.
 
 ### Layout
+Because the app is just a web page, you can open it in multiple browser windows at once. Resize the windows and you can monitor many cameras at the same time!
+
+![Vertical Screenshot](screenshots/WebUI2.png)
+
 I have done my best to make the page responsive, but every screen is different. If something looks off, adjust the zoom/scale of the window in your browser and that should fix things.
 
 # Compatibility
@@ -82,4 +86,4 @@ If you're having trouble and don't know why, check the browser console.
 - Add audio settings
 - Add codec/format switching settings
 - Improve responsiveness
-- Improved error handling
+- Improve error handling
