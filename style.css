@@ -1,5 +1,16 @@
 /* ============= WHOLE PAGE STYLES ================== */
 
+/* Handle vertical screens */
+@media screen and (max-width: 1000px) {
+    #cameraControlsContainer {
+        width: 100vw!important;
+    }
+
+    #cameraControlsContainerExpanded {
+        display: none;
+    }
+}
+
 /* Load NotoSansDisplay Font from resources */
 @font-face {
     font-family: 'NotoSansDisplay';

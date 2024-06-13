@@ -186,16 +186,16 @@ class BMDCamera {
     updateUIPresets() {
         var presetsList = document.getElementById("presetsDropDown");
 
+        presetsList.innerHTML = "";
+
         this.presets.forEach((presetItem) => {
             let presetName = presetItem.split('.', 1);
 
-            if (!presetsList.contains(document.getElementsByName("presetOption"+presetName)[0])) {
-                let textNode = document.createTextNode(presetName);
-                let optionNode = document.createElement("option");
-                optionNode.setAttribute("name", "presetOption"+presetName);
-                optionNode.appendChild(textNode);
-                document.getElementById("presetsDropDown").appendChild(optionNode);
-            }
+            let textNode = document.createTextNode(presetName);
+            let optionNode = document.createElement("option");
+            optionNode.setAttribute("name", "presetOption"+presetName);
+            optionNode.appendChild(textNode);
+            document.getElementById("presetsDropDown").appendChild(optionNode);
         });
     }
 
@@ -248,6 +248,10 @@ class BMDCamera {
 
     updateUINDStop() {
         document.getElementById("ndFilterSpan").innerHTML = this.NDStop;
+        if (this.UnimplementedFunctionality.includes("/video/ndFilter")) {
+            document.getElementById("ndFilterSpan").innerHTML = 0;
+            document.getElementById("ndFilterSpan").disabled = true;
+        }
     }
 
     updateUIshutter() {
