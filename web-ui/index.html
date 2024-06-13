@@ -56,36 +56,36 @@
                     </div> -->
                     <span style="margin-top: 0.5em;">Lift</span>
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
-                        <button id="CCResetButton" class="circleButton" onclick="resetCC(0)" title="Reset Lift">&#10227</button>
+                        <button class="CCResetButton circleButton" onclick="resetCC(0)" title="Reset Lift">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(0)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(0)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(0)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(0)">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(0)" title="Set Lift">&#10138</button>
                     </div>
 
                     <span>Gamma</span>
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
-                        <button id="CCResetButton" class="circleButton" onclick="resetCC(1)" title="Reset Gamma">&#10227</button>
+                        <button class="CCResetButton circleButton" onclick="resetCC(1)" title="Reset Gamma">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(1)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(1)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(1)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(1)">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(1)" title="Set Gamma">&#10138</button>
                     </div>
 
                     <span>Gain</span>
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
-                        <button id="CCResetButton" class="circleButton" onclick="resetCC(2)" title="Reset Gain">&#10227</button>
+                        <button class="CCResetButton circleButton" onclick="resetCC(2)" title="Reset Gain">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(2)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(2)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(2)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(2)">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(2)" title="Set Gain">&#10138</button>
                     </div>
@@ -93,12 +93,12 @@
 
                     <span>Offset</span>
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
-                        <button id="CCResetButton" class="circleButton" onclick="resetCC(3)" title="Reset Offset">&#10227</button>
+                        <button class="CCResetButton circleButton" onclick="resetCC(3)" title="Reset Offset">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(3)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(3)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(3)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(3)">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(3)" title="Set Offset">&#10138</button>
                     </div>
@@ -109,7 +109,7 @@
                         <span class="exposureControlLabel">FILTER</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseND()" id="NDL">&#9664</a>
-                            <span id="ndFilterSpan">0</span>
+                            <span id="ndFilterSpan" contenteditable="plaintext-only" oninput="cameras[ci].setND(parseInt(this.innerHTML))">0</span>
                             <a class="expAdjArr" href="#" onclick="increaseND()" id="NDR">&#9654</a>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                         <span class="exposureControlLabel">GAIN</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseGain()" id="GAL">&#9664</a>
-                            <span id="gainSpan">+0db</span>
+                            <span id="gainSpan" contenteditable="plaintext-only" oninput="cameras[ci].setGain(parseInt(this.innerHTML))">+0db</span>
                             <a class="expAdjArr" href="#" onclick="increaseGain()" id="GAR">&#9654</a>
                         </div>
                     </div>
@@ -125,16 +125,21 @@
                         <span class="exposureControlLabel">SHUTTER</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseShutter()" id="SHL">&#9664</a>
-                            <span id="shutterSpan">1/50</span>
+                            <span id="shutterSpan" contenteditable="plaintext-only" oninput="handleShutterInput(this.innerHTML)">1/50</span>
                             <a class="expAdjArr" href="#" onclick="increaseShutter()" id="SHR">&#9654</a>
                         </div>
                     </div>
                     <div class="ccExposureSettingContainer">
-                        <span class="exposureControlLabel">BALANCE</span>
-                        <div class="ccExposureSettingValueContainer">
+                        <span class="exposureControlLabel" onclick="swapWBMode()" id="WBLabel">BALANCE</span>
+                        <div class="ccExposureSettingValueContainer" id="WBValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseWhiteBalance()" id="WBL">&#9664</a>
-                            <span id="whiteBalanceSpan">5600K</span>
+                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" oninput="cameras[ci].setWhiteBalance(parseInt(this.innerHTML),cameras[ci].whiteBalanceTint)">5600K</span>
                             <a class="expAdjArr" href="#" onclick="increaseWhiteBalance()" id="WBR">&#9654</a>
+                        </div>
+                        <div class="ccExposureSettingValueContainer dNone" id="WBTintValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalanceTint()" id="WBTL">&#9664</a>
+                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" oninput="cameras[ci].setWhiteBalance(cameras[ci].whiteBalance,parseInt(this.innerHTML))">0</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalanceTint()" id="WBLR">&#9654</a>
                         </div>
                     </div>
                 </div>
@@ -162,14 +167,19 @@
             <div class="flexContainerV" id="cameraControlsContainerExpanded">
                     <div class="flexContainerH" id="cameraControlExpandedHeadContainer">
                         <h2 id="cameraName">CAMERA NAME</h2>
+                        <div id="formatDisplay">
+                            <span id="formatCodec">CODEC</span>
+                            <span id="formatResolution">RESOLUTION</span>
+                            <span id="formatFPS">FPS</span>
+                        </div>
                         <div id="transportControls">
                             <!-- These will be sticky buttons for loop, single clip, record -->
-                            <button class="circleButton" onclick="" title="Loop">&#8635</button>
+                            <!--<button class="circleButton" onclick="" title="Loop">&#8635</button>
                             <button class="circleButton" onclick="" title="Single Clip">S</button>
                             <button class="circleButton" onclick="" title="Back">&#9204</button>
-                            <button class="circleButton" onclick="" title="Forward">&#9205</button>
+                            <button class="circleButton" onclick="" title="Forward">&#9205</button> -->
                             <button class="circleButton" onclick="cameras[ci].record()" title="Record">&#9210</button>
-                            <button class="circleButton" onclick="cameras[ci].play()" title="Play">&#9654</button>
+                            <!-- <button class="circleButton" onclick="cameras[ci].play()" title="Play">&#9654</button> -->
                             <button class="circleButton" onclick="cameras[ci].stopTransport(); cameras[ci].stopRecord();" title="Stop">&#9209</button>
                         </div>
                         <h2 id="timecodeLabel">TIMECODE</h2>
@@ -182,8 +192,9 @@
                                 <tr>
                                     <td>Hostname</td>
                                     <td>
-                                        <input type="text" value="Studio-Camera-6K-Pro.local" id="hostnameInput" onkeydown="textInputTrigger(this)">
-                                        <button onclick='cameras[ci] = new BMDCamera(document.getElementById("hostnameInput").value,ci);'>Connect</button>
+                                        <input type="text" value="Studio-Camera-6K-Pro.local" id="hostnameInput">
+                                        <button onclick='initCamera(document.getElementById("hostnameInput").value, ci)'>Connect</button>
+                                        <span id="connectionErrorSpan"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -200,6 +211,11 @@
                                         <button onclick="manualAPICall()">Send API Request</button>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p id="manualRequestResponseP">Send manual API requests using the above controls. See documentation for details.</p>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         
@@ -209,15 +225,13 @@
                                 <tr>
                                     <td>Preset Select</td>
                                     <td>
-                                        <select id="presetsDropDown" onchange="console.log('Preset selected: '+this.value)">
-                                            <option value="default">Default</option>
-                                            <option value="other">other</option>
+                                        <select id="presetsDropDown" onchange="cameras[ci].setActivePreset(this.value+'.cset')">
+                                            <!-- Auto-populated by updateUIPresets() -->
                                         </select>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td style="color: #727272;">Upload a preset file</td>
-                                    <td><input type="file" id="presetFileInput"></td>
+                                    <td>
+                                        <button onclick="cameras[ci].setActivePreset(document.getElementById('presetsDropDown').value+'.cset')">Restore from Preset</button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -260,11 +274,20 @@
                             <table>
                                 <tr>
                                     <td>Pivot</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CCcontrastPivotRange"></td>
+                                    <td><input type="range" max="5" min="-5" step="0.001" id="CCcontrastPivotRange" onmouseup="cameras[ci].setCCContrast({'pivot': parseFloat(this.value)})"></td>
+                                    <td>
+                                        <span id="CCcontrastPivotLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCContrast({'pivot': parseFloat(this.innerHTML)})">0</span>
+                                    </td>
+                                    <td rowspan="2">
+                                        <button class="CCResetButton circleButton" onclick="resetCC(4)" title="Reset Contrast">&#10227</button>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Adjust</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CCcontrastAdjustRange"></td>
+                                    <td><input type="range" max="5" min="-5" step="0.001" id="CCcontrastAdjustRange" onmouseup="cameras[ci].setCCContrast({'adjust': parseFloat(this.value)})"></td>
+                                    <td>
+                                        <span id="CCcontrastAdjustLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCContrast({'adjust': parseFloat(this.innerHTML)})">0</span>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -274,15 +297,27 @@
                             <table>
                                 <tr>
                                     <td>Hue</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CChueRange"></td>
+                                    <td><input type="range" max="1" min="-1" step="0.001" id="CChueRange" onmouseup="cameras[ci].setCCColor({'hue': parseFloat(this.value)})"></td>
+                                    <td>
+                                        <span id="CCcolorHueLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCColor({'hue': parseFloat(this.innerHTML)})">0</span>
+                                    </td>
+                                    <td rowspan="3">
+                                        <button class="CCResetButton circleButton" onclick="resetCC(5)" title="Reset Color">&#10227</button>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Saturation</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CCsaturationRange"></td>
+                                    <td><input type="range" max="2" min="0" step="0.001" id="CCsaturationRange" onmouseup="cameras[ci].setCCColor({'saturation': parseFloat(this.value)})"></td>
+                                    <td>
+                                        <span id="CCcolorSatLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCColor({'saturation': parseFloat(this.innerHTML)})">0</span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Luma Contribution</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CClumaContributionRange"></td>
+                                    <td><input type="range" max="1" min="0" step="0.001" id="CClumaContributionRange" onmouseup="cameras[ci].setCCLumaContribuion({'lumaContribution': parseFloat(this.value)})"></td>
+                                    <td>
+                                        <span id="CCcolorLCLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCLumaContribuion({'lumaContribution': parseFloat(this.innerHTML)})">0</span>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -293,7 +328,10 @@
 
         <!-- Footer Div -->
         <div class="flexContainerH" id="footerContainer">
-            <button onclick="cameras.forEach((element) => {element.refresh()});">Refresh</button>
+            <div id="footerLeft">
+                <button onclick="cameras.forEach((element) => {element.refresh()});">Refresh</button>
+                <span id="refreshingText" class="refreshing">Refreshing...</span>
+            </div>
             <div id="footerLinks">
                 <span><a id="documentationLink" href="#" target="_blank">YAML Documentation</a></span>
                 <span><a id="mediaManagerLink" href="#" target="_blank">Web Media Manager</a></span>

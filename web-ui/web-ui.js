@@ -1,7 +1,7 @@
 /* Global variables */
 var cameras = [];
 var ci = 0;
-var ccMode = 0;
+var WBMode = 0; // 0: balance, 1: tint
 
 function bodyOnLoad() {
     let intervalIDOne = setInterval(timerCallFunction1, 1000); // Tem second timer for refreshing everything
@@ -10,8 +10,22 @@ function bodyOnLoad() {
     let newCamHostname = document.getElementById("hostnameInput").value;
 
     if (newCamHostname) {
-        cameras[ci] = new BMDCamera(newCamHostname,ci);
+        initCamera(newCamHostname, ci);
     }
+}
+
+function initCamera(hostname, ind) {
+    sendRequest("GET", "http://"+hostname+"/control/api/v1/system","").then((response) => {
+        if (response.status < 300) {
+            cameras[ci] = new BMDCamera(hostname, ind);
+        } else {
+            document.getElementById("connectionErrorSpan").innerHTML = response.statusText;
+        }
+    }).catch(error => {
+        document.getElementById("connectionErrorSpan").title = error;
+        document.getElementById("connectionErrorSpan").innerHTML = "Error "+error.code+": "+error.name+" (Your hostname is probably incorrect, hover for more details)";
+    });
+
 }
 
 // One Second Timer Call
@@ -31,12 +45,6 @@ function timerCallFunction1() {
 function timerCallFunction10() {
     if (cameras[ci]) {
         cameras[ci].refresh();
-    }
-}
-
-function textInputTrigger(element) {
-    if (event.key === 'Enter') {
-        cameras[ci] = new BMDCamera(element.value, ci);
     }
 }
 
@@ -79,6 +87,50 @@ function setCCMode(mode) {
     }
 }
 
+function swapWBMode() {
+    if (WBMode == 0) {
+        // Balance
+        document.getElementById("WBLabel").innerHTML = "TINT";
+        document.getElementById("WBValueContainer").classList.add("dNone");
+        document.getElementById("WBTintValueContainer").classList.remove("dNone");
+        
+        WBMode = 1;
+    } else {
+        //Tint
+        document.getElementById("WBLabel").innerHTML = "BALANCE";
+        document.getElementById("WBValueContainer").classList.remove("dNone");
+        document.getElementById("WBTintValueContainer").classList.add("dNone");
+
+        WBMode = 0;
+    }
+}
+
+function manualAPICall() {
+    const requestRadioGET = document.getElementById("requestTypeGET");
+
+    const requestEndpointText = document.getElementById("manualRequestEndpointLabel").value;
+    let requestData = "";
+
+    try {
+        requestData = JSON.parse(document.getElementById("manualRequestBodyLabel").value);
+    } catch (err) {
+        document.getElementById("manualRequestResponseP").innerHTML = err;
+    }
+
+    const requestMethod = (requestRadioGET.checked ? "GET" : "PUT");
+    const requestURL = cameras[ci].APIAddress+requestEndpointText;
+
+    sendRequest(requestMethod,requestURL,requestData).then((response) => {
+        // console.log("Manual API Call Response: ", response);
+        if (!response.status) {
+            document.getElementById("manualRequestResponseP").innerHTML = JSON.stringify(response);
+        } else {
+            document.getElementById("manualRequestResponseP").innerHTML = response.status+": "+response.statusText;
+        }
+        
+    });
+}
+
 /* Control Calling Functions */
 
 function decreaseND() {
@@ -117,12 +169,37 @@ function increaseShutter() {
     }
 }
 
+function handleShutterInput(inputString) {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        cam.setShutter({"shutterSpeed" :parseInt(inputString)});
+    } else {
+        cam.setShutter({"shutterAngle": parseInt(parseFloat(inputString)*100)});
+    }
+}
+
 function decreaseWhiteBalance() {
     cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance-50,cameras[ci].WhiteBalanceTint);
 }
 
 function increaseWhiteBalance() {
     cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance+50,cameras[ci].WhiteBalanceTint);
+}
+
+function decreaseWhiteBalanceTint() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint-1);
+}
+
+function increaseWhiteBalanceTint() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint+1);
+}
+
+function AEmodeInputHandler() {
+    let AEmode = document.getElementById("AEmodeDropDown").value;
+    let AEtype = document.getElementById("AEtypeDropDown").value;
+
+    cameras[ci].setAutoExposureMode({mode: AEmode, type: AEtype});
 }
 
 // 0: lift, 1: gamma, 2: gain, 3: offset
@@ -145,7 +222,7 @@ function setCCFromUI(which) {
     }
 }
 
-// 0: lift, 1: gamma, 2: gain, 3: offset
+// 0: lift, 1: gamma, 2: gain, 3: offset, 4: contrast, 5: color & LC
 function resetCC(which) {
     if (which == 0) {
         cameras[ci].setCCLift({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
@@ -153,8 +230,13 @@ function resetCC(which) {
         cameras[ci].setCCGamma({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
     } else if (which == 2) {
         cameras[ci].setCCGain({"red": 1.0, "green": 1.0, "blue": 1.0, "luma": 1.0});
-    } else {
+    } else if (which == 3) {
         cameras[ci].setCCOffset({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 4) {
+        cameras[ci].setCCContrast({"pivot": 0.0, "adjust": 1.0});
+    } else if (which == 5) {
+        cameras[ci].setCCColor({"hue": 0.0, "saturation": 1.0});
+        cameras[ci].setCCLumaContribuion({"lumaContribution": 1.0});
     }
 }
 

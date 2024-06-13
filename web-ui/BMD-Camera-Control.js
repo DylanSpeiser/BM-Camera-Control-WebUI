@@ -7,15 +7,8 @@ class BMDCamera {
     // Camera index, used for muticam support
     index;
 
-    // == TODO: Having trouble with the codec and video formats on the SC 6K Pro ==
-    // Codec and Video Formats (JSON objects)
-    codecFormat;
-    videoFormat;
-
-    // Supported Codecs/Videos (arrays)
-    supportedCodecFormats;
-    supportedVideoFormats;
-    // ============================================================================
+    // Codec and Video Formats (JSON object)
+    format;
 
     // Current Transport Mode (string)
     transportMode;
@@ -92,15 +85,33 @@ class BMDCamera {
 
     // Important refreshing function
     refresh() {
+        document.getElementById("refreshingText").classList.add("refreshing");
         this.getAllInfo();
-        sleep(500).then(() => 
-            this.updateUIAll()
+        sleep(200).then(() => {
+                this.updateUIAll();
+                document.getElementById("refreshingText").classList.remove("refreshing");
+            }
         ); 
     }
 
     // Wrapper for API call, returns the JSON object from the camera
     async pullData(endpoint) {
-        return await sendRequest("GET",this.APIAddress+endpoint,"");
+        // Ask the camera a question
+        let response;
+        
+        if (this.UnimplementedFunctionality.indexOf(endpoint) < 0) {
+            response = await sendRequest("GET",this.APIAddress+endpoint,"");
+        } else {
+            response = "Unimplemented";
+        }
+
+        // Check for unimplemented features
+        if (response.status == 501) {
+            this.UnimplementedFunctionality.push(endpoint);
+            response = "Unimplemented";
+        }
+
+        return response
     }
 
     // Wrapper for API call, returns whatever the camera sent back in response
@@ -112,10 +123,7 @@ class BMDCamera {
     updateUIAll() {
         this.updateUIname();
         this.updateUIhostname();
-        this.updateUICodecFormat();
-        this.updateUIVideoFormat();
-        this.updateUISupportedCodecFormats();
-        this.updateUISupportedVideoFormats();
+        this.updateUIFormat();
         this.updateUITransportMode();
         this.updateUIPlaybackState();
         this.updateUIRecordState();
@@ -143,20 +151,12 @@ class BMDCamera {
         document.getElementById("hostnameInput").value = this.hostname;
     }
 
-    updateUICodecFormat() {
-        //TBD
-    }
-
-    updateUIVideoFormat() {
-        //TBD
-    }
-
-    updateUISupportedCodecFormats() {
-        //TBD
-    }
-
-    updateUISupportedVideoFormats() {
-        //TBD
+    updateUIFormat() {
+        document.getElementById("formatCodec").innerHTML = this.format.codec.toUpperCase().replace(":"," ").replace("_",":");
+        
+        let resObj = this.format.recordResolution;
+        document.getElementById("formatResolution").innerHTML = resObj.width + "x" + resObj.height;
+        document.getElementById("formatFPS").innerHTML = this.format.frameRate+" fps";
     }
 
     updateUITransportMode() {
@@ -178,18 +178,37 @@ class BMDCamera {
     }
 
     updateUITimecode() {
-        // Redo this to work with no leading 0
-        var tcString = parseInt(this.timecode.timecode.toString(16),10).toString().match(/.{1,2}/g).join(':');
+        var tcString = parseInt(this.timecode.timecode.toString(16),10).toString().padStart(8,'0').match(/.{1,2}/g).join(':');
 
         document.getElementById("timecodeLabel").innerHTML = tcString;
     }
 
     updateUIPresets() {
-        //TBD
+        var presetsList = document.getElementById("presetsDropDown");
+
+        this.presets.forEach((presetItem) => {
+            let presetName = presetItem.split('.', 1);
+
+            if (!presetsList.contains(document.getElementsByName("presetOption"+presetName)[0])) {
+                let textNode = document.createTextNode(presetName);
+                let optionNode = document.createElement("option");
+                optionNode.setAttribute("name", "presetOption"+presetName);
+                optionNode.appendChild(textNode);
+                document.getElementById("presetsDropDown").appendChild(optionNode);
+            }
+        });
     }
 
     updateUIActivePreset() {
-        //TBD
+        var presetsList = document.getElementById("presetsDropDown");
+
+        presetsList.childNodes.forEach((child) => {
+            if (child.nodeName == 'OPTION' && child.value == cameras[ci].activePreset) {
+                child.selected=true
+            } else {
+                child.selected=false
+            }
+        })
     }
 
     updateUIAperture() {
@@ -224,6 +243,7 @@ class BMDCamera {
 
     updateUIWhiteBalance() {
         document.getElementById("whiteBalanceSpan").innerHTML = this.WhiteBalance+"K";
+        document.getElementById("whiteBalanceTintSpan").innerHTML = this.WhiteBalanceTint;
     }
 
     updateUINDStop() {
@@ -248,7 +268,11 @@ class BMDCamera {
     }
 
     updateUIAutoExposureMode() {
-        //TBD
+        let AEmodeSelect = document.getElementById("AEmodeDropDown");
+        let AEtypeSelect = document.getElementById("AEtypeDropDown");
+
+        AEmodeSelect.value = cameras[ci].AutoExposureMode.mode;
+        AEtypeSelect.value = cameras[ci].AutoExposureMode.type;
     }
 
     updateUIColorCorrection() {
@@ -275,6 +299,22 @@ class BMDCamera {
         document.getElementsByClassName("CCredLabel")[3].innerHTML = this.CCoffset.red.toFixed(2);
         document.getElementsByClassName("CCgreenLabel")[3].innerHTML = this.CCoffset.green.toFixed(2);
         document.getElementsByClassName("CCblueLabel")[3].innerHTML = this.CCoffset.blue.toFixed(2);
+    
+        // Contrast
+        document.getElementById("CCcontrastPivotRange").value = this.CCcontrast.pivot;
+        document.getElementById("CCcontrastPivotLabel").innerHTML = this.CCcontrast.pivot.toFixed(2);
+        document.getElementById("CCcontrastAdjustRange").value = this.CCcontrast.adjust;
+        document.getElementById("CCcontrastAdjustLabel").innerHTML = this.CCcontrast.adjust.toFixed(2);
+        
+        // Color
+        document.getElementById("CChueRange").value = this.CCcolor.hue;
+        document.getElementById("CCcolorHueLabel").innerHTML = this.CCcolor.hue.toFixed(2);
+        
+        document.getElementById("CCsaturationRange").value = this.CCcolor.saturation;
+        document.getElementById("CCcolorSatLabel").innerHTML = this.CCcolor.saturation.toFixed(2);
+
+        document.getElementById("CClumaContributionRange").value = this.CClumacontribution.lumaContribution;
+        document.getElementById("CCcolorLCLabel").innerHTML = this.CClumacontribution.lumaContribution.toFixed(2);
     }
 
     updateUILinks() {
@@ -286,20 +326,8 @@ class BMDCamera {
 
     // name, hostname, APIaddress, index handled by constructor
 
-    getCodecFormat() {
-        this.pullData("/system/codecFormat").then((value) => {this.codecFormat = value; this.updateUICodecFormat()});
-    }
-
-    getVideoFormat() {
-        this.pullData("/system/videoFormat").then((value) => {this.videoFormat = value; this.updateUIVideoFormat()});
-    }
-
-    getSupportedCodecFormats() {
-        this.pullData("/system/supportedCodecFormats").then((value) => {this.supportedCodecFormats = value; this.updateUISupportedCodecFormats()});
-    }
-
-    getSupportedVideoFormats() {
-        this.pullData("/system/supportedVideoFormats").then((value) => {this.supportedVideoFormats = value; this.updateUISupportedVideoFormats()});
+    getFormat() {
+        this.pullData("/system/format").then((value) => {this.format = value; this.updateUIFormat()});
     }
 
     getTransportMode() {
@@ -376,10 +404,7 @@ class BMDCamera {
     }
 
     getAllInfo() {
-        this.getCodecFormat();
-        this.getVideoFormat();
-        this.getSupportedCodecFormats();
-        this.getSupportedVideoFormats();
+        this.getFormat();
         this.getTransportMode();
         this.getPlaybackState();
         this.getRecordState();
@@ -423,7 +448,11 @@ class BMDCamera {
     }
 
     setActivePreset(presetString) {
-        this.pushData("/presets/active",{"preset": presetString}).then(() => sleep(1000).then(() => this.getActivePreset()));
+        this.pushData("/presets/active",{"preset": presetString}).then(() => sleep(1000).then(() => this.refresh()));
+    }
+
+    updatePreset(presetString) {
+        this.pushData("/presets/active",{"preset": presetString}).then(() => sleep(1000).then(() => this.getPresets()));
     }
 
     setAperture(apertureNormalisedFloat) {
@@ -530,36 +559,18 @@ async function sendRequest(method, url, data) {
     const xhttp  = new XMLHttpRequest();
     var responseObject;
 
-    // TODO: Add error code handling
     xhttp.onload = function() {
-        if (this.responseText) {
+        if (this.status == 200) {
+            // Success w/ Data
             responseObject = JSON.parse(this.responseText);
         } else {
-            responseObject = {"status": this.statusText};
+            // Pass along response data and stuff
+            responseObject = this;
         }
     }
 
-    // Don't keep making API calls for unimplemented features
-    if (cameras[ci]) {
-        // First check if the camera exists.
-        if (cameras[ci].UnimplementedFunctionality.indexOf(url) < 0) {
-            // If everything is honky dory
-    
-            xhttp.open(method, url, false);
-            xhttp.send(JSON.stringify(data));
-        } else {
-            // If everything is not honky dory
-            // do nothing
-        }
-
-        if ((!responseObject) || (Object.hasOwn(responseObject,'error') && responseObject.error == "Not implemented for this device")) {
-            cameras[ci].UnimplementedFunctionality.push(url);
-        }
-
-    } else {
-        xhttp.open(method, url, false);
-        xhttp.send(JSON.stringify(data));
-    }
+    xhttp.open(method, url, false);
+    xhttp.send(JSON.stringify(data));
 
     return responseObject;
 }

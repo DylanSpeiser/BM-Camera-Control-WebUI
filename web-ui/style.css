@@ -7,6 +7,10 @@
          url('resources/NotoSansDisplay-VariableFont_wdth\,wght.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
 
+.dNone {
+    display: none;
+}
+
 body {
     font-family: 'NotoSansDisplay', sans-serif;
     font-weight: 100;
@@ -165,6 +169,10 @@ input[type=file]:focus {
     scrollbar-color: #202020 #151515;
 }
 
+#formatDisplay span {
+    margin: 0px 1em;
+}
+
 #footerContainer {
     background: #181818;
     background: linear-gradient(0deg, #181818 0%, #303030 100%);
@@ -180,6 +188,14 @@ input[type=file]:focus {
 #footerContainer button {
     padding: 0.4em 0.8em;
     font-size: x-small;
+}
+
+#refreshingText.refreshing {
+    color: #606060ff;
+}
+
+#refreshingText {
+    color: #60606000;
 }
 
 #footerLinks span {
@@ -377,6 +393,14 @@ h2 {
 
 #timecodeLabel {
     
+}
+
+#connectionErrorSpan {
+    color: #e64b3d;
+}
+
+#manualRequestResponseP {
+    color: #6e6e6e;
 }
 
 /* Table Controls */
