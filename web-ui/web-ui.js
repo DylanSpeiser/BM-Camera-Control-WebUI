@@ -1,24 +1,160 @@
 /* Global variables */
 var cameras = [];
 var ci = 0;
+var ccMode = 0;
 
 function bodyOnLoad() {
-    //let intervalID = setInterval(timerCallFunction, 1000);
+    let intervalIDOne = setInterval(timerCallFunction1, 1000); // Tem second timer for refreshing everything
+    let intervalIDTen = setInterval(timerCallFunction10, 10000); // Tem second timer for refreshing everything
 
-    let newCamHostname = document.getElementsByClassName("hostnameInput")[ci].value;
+    let newCamHostname = document.getElementById("hostnameInput").value;
 
     if (newCamHostname) {
         cameras[ci] = new BMDCamera(newCamHostname,ci);
     }
 }
 
-// function timerCallFunction() {
-//     cameras.forEach((camera) => camera.everySecond());
-// }
+// One Second Timer Call
+function timerCallFunction1() {
+    if (cameras[ci]) {
+        cameras[ci].getRecordState();
+        cameras[ci].getPlaybackState();
+        cameras[ci].getTimecode();
+    
+        cameras[ci].updateUIRecordState();
+        cameras[ci].updateUIPlaybackState();
+        cameras[ci].updateUITimecode();
+    }
+}
+
+// Ten Second Timer Call
+function timerCallFunction10() {
+    if (cameras[ci]) {
+        cameras[ci].refresh();
+    }
+}
 
 function textInputTrigger(element) {
     if (event.key === 'Enter') {
         cameras[ci] = new BMDCamera(element.value, ci);
+    }
+}
+
+function switchCamera(index) {
+    ci = index;
+
+    if (cameras[ci]) {
+        cameras[ci].refresh();
+    }
+
+    for (var i = 0; i < 8; i++) {
+        if (i == ci) {
+            document.getElementsByClassName("cameraSwitchLabel")[i].classList.add("selectedCam");
+        } else {
+            document.getElementsByClassName("cameraSwitchLabel")[i].classList.remove("selectedCam");
+        }
+    }
+
+    document.getElementById("cameraNumberLabel").innerHTML = "CAM"+(ci+1);
+}
+
+function setCCMode(mode) {
+    if (mode == 0) {
+        // Lift
+
+    } else if (mode == 1) {
+        // Gamma
+
+    } else {
+        // Gain
+
+    }
+
+    for (var i = 0; i < 3; i++) {
+        if (i == mode) {
+            document.getElementsByClassName("ccTabLabel")[i].classList.add("selectedTab");
+        } else {
+            document.getElementsByClassName("ccTabLabel")[i].classList.remove("selectedTab");
+        }
+    }
+}
+
+/* Control Calling Functions */
+
+function decreaseND() {
+    cameras[ci].setND(cameras[ci].NDStop-2);
+}
+
+function increaseND() {
+    cameras[ci].setND(cameras[ci].NDStop+2);
+}
+
+function decreaseGain() {
+    cameras[ci].setGain(cameras[ci].gain-2);
+}
+
+function increaseGain() {
+    cameras[ci].setGain(cameras[ci].gain+2);
+}
+
+function decreaseShutter() {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed+10});
+    } else {
+        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle-1000});
+    }
+}
+
+function increaseShutter() {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed-10});
+    } else {
+        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle+1000});
+    }
+}
+
+function decreaseWhiteBalance() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance-50,cameras[ci].WhiteBalanceTint);
+}
+
+function increaseWhiteBalance() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance+50,cameras[ci].WhiteBalanceTint);
+}
+
+// 0: lift, 1: gamma, 2: gain, 3: offset
+function setCCFromUI(which) {
+    let lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
+    let redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
+    let greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
+    let blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
+    
+    let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
+
+    if (which == 0) {
+        cameras[ci].setCCLift(ccobject);
+    } else if (which == 1) {
+        cameras[ci].setCCGamma(ccobject);
+    } else if (which == 2) {
+        cameras[ci].setCCGain(ccobject);
+    } else {
+        cameras[ci].setCCOffset(ccobject);
+    }
+}
+
+// 0: lift, 1: gamma, 2: gain, 3: offset
+function resetCC(which) {
+    if (which == 0) {
+        cameras[ci].setCCLift({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 1) {
+        cameras[ci].setCCGamma({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 2) {
+        cameras[ci].setCCGain({"red": 1.0, "green": 1.0, "blue": 1.0, "luma": 1.0});
+    } else {
+        cameras[ci].setCCOffset({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
     }
 }
 
@@ -32,7 +168,6 @@ function makeFakeCamera() {
         "transportMode": {
             "mode": "InputPreview"
         },
-        "isPlaying": false,
         "playbackState": {
             "loop": false,
             "position": 0,

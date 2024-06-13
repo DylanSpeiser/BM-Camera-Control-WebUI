@@ -1,3 +1,5 @@
+/* ============= WHOLE PAGE STYLES ================== */
+
 /* Load NotoSansDisplay Font from resources */
 @font-face {
     font-family: 'NotoSansDisplay';
@@ -7,6 +9,7 @@
 
 body {
     font-family: 'NotoSansDisplay', sans-serif;
+    font-weight: 100;
     margin: 0px;
     overflow: hidden;
     background: #181818;
@@ -22,6 +25,91 @@ body {
     display: inline-flex;
 }
 
+/* Inputs */
+
+input[type=text] {
+    border-radius: 0.5vh;
+    background: rgb(30, 30, 30);
+    color: white;
+    height: 2em;
+    width: 10vw;
+    border: 1px solid rgb(20, 20, 20);
+    text-align: center;
+    font-family: 'NotoSansDisplay', sans-serif;
+    outline: none;
+    margin: 0px 0.5vw;
+}
+
+input[type=text]:focus {
+    border: 1px solid rgb(150, 58, 0);
+}
+
+input[type=number] {
+    border-radius: 0.5vh;
+    background: rgb(30, 30, 30);
+    color: white;
+    height: 2em;
+    width: 4.666vw;
+    border: 1px solid rgb(20, 20, 20);
+    text-align: center;
+    font-family: 'NotoSansDisplay', sans-serif;
+    outline: none;
+}
+
+input[type=number]:focus {
+    border: 1px solid rgb(150, 58, 0);
+}
+
+input[type=range][orient=vertical] {
+    writing-mode: vertical-lr; direction: rtl;
+    width: 2vw;
+    height: 80%;
+}
+
+select {
+    border-radius: 0.5vh;
+    background: rgb(30, 30, 30);
+    color: white;
+    height: 2em;
+    width: 5vw;
+    border: 1px solid rgb(20, 20, 20);
+    text-align: center;
+    font-family: 'NotoSansDisplay', sans-serif;
+    outline: none;
+}
+
+select:focus {
+    border: 1px solid rgb(150, 58, 0);
+}
+
+button {
+    font-family: 'NotoSansDisplay', sans-serif;
+    background: #181818;
+    background: linear-gradient(0deg, #232323 0%, #404040 100%);
+    border: 0.3vh solid black;
+    outline: 0.3vh solid #404040;
+    color: white;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 0.4em;
+    padding: 0.5vh 1vw;
+    margin: 1vh;
+}
+
+button:hover {
+    background: #313131;
+    background: linear-gradient(0deg, #313131 0%, #4d4d4d 100%);
+}
+
+button:active {
+    background: #181818;
+    box-shadow: inset 0 0 1em #090909;
+}
+
+input[type=file]:focus {
+    border: 1px solid rgb(150, 58, 0);
+}
+
 /* Horizontal Container Styles */
 #headerContainer {
     background: #181818;
@@ -34,9 +122,9 @@ body {
 }
 
 #headerContainer h1 {
-    font-weight: 100;
     color: white;
     margin-left: 1.3vw;
+    font-weight: 100;
 }
 
 #cameraSelectContainer {
@@ -44,6 +132,27 @@ body {
     border: 1px solid black;
     width: 100%;
     height: 3.53vh;
+    color: #474747;
+    font-size: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+#cameraSelectContainer span {
+    height: fit-content;
+}
+
+#cameraSelectContainer .camSelectSeparator {
+    margin: 0px 0.5em;
+}
+
+.cameraSwitchLabel a {
+    text-decoration: none;
+    color: #474747;
+}
+
+.cameraSwitchLabel.selectedCam a {
+    color: #e66c01;
 }
 
 #allCamerasContainer {
@@ -64,10 +173,26 @@ body {
     height: 5vh;
     position: fixed;
     bottom: 0;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#footerContainer button {
+    padding: 0.4em 0.8em;
+    font-size: x-small;
+}
+
+#footerLinks span {
+    margin-right: 1.25vw;
+}
+
+#footerLinks a {
+    text-decoration: none;
+    color: #e66c01;
 }
 
 /* Camera Controls Container */
-.cameraControlsContainer {
+#cameraControlsContainer {
     width: 15vw;
     height: 100%;
     background: #282828;
@@ -76,50 +201,104 @@ body {
     flex-shrink: 0;
 }
 
-.cameraControlsContainer.selectedCam {
-    background: #323232;
-}
-
-.liveCam .cameraControlHeadContainer {
+.liveCam {
     background: rgb(184,3,16);
     background: linear-gradient(90deg, rgba(184,3,16,1) 0%, rgba(255,0,19,1) 15%, rgba(255,0,19,1) 85%, rgba(184,3,16,1) 100%);
 }
 
-.cameraControlHeadContainer {
+#cameraControlHeadContainer {
     width: 100%;
     height: 5vh;
     border-bottom: 2px solid black;
     align-items: center;
+    color: white;
 }
 
-.cameraName {
-    font-weight: 100;
-    color: white;
+h2 {
     margin-inline-start: 0.6em;
     margin-inline-end: 0.6em;
+    font-weight: 100;
+}
+
+#cameraName {
+    
 }
 
 /* Color Correction Section */
-.cameraControlColorCorrectionContainer {
+#cameraControlColorCorrectionContainer {
     width: 100%;
     height: 33vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#cameraControlLGGTabs {
+    margin-top: 2vh;
+    border: 1px solid #101010;
+    border-radius: 2.5vh;
+    overflow: hidden;
+}
+
+
+#cameraControlLGGTabs a {
+    background: #181818;
+    background: linear-gradient(0deg, #181818 0%, #303030 100%);
+
+    padding: 0.1vh 1.25vw 0.25vh 1.25vw;
+
+    border-left: 1px solid #101010;
+    
+    text-decoration: none;
+    color: #474747;
+}
+
+#cameraControlLGGTabs a.selectedTab {
+    color: #e66c01;
+}
+
+.ccExposureSettingValueContainer .expAdjArr {
+    text-decoration: none;
+    color: #60606000;
+}
+
+.ccExposureSettingValueContainer:hover .expAdjArr {
+    color: #606060ff;
+}
+
+.ccExposureSettingValueContainer:hover .expAdjArr:hover {
+    color: #474747;
+}
+
+.ccExposureSettingValueContainer:hover .expAdjArr:active {
+    color: #e66c01;
+}
+
+#cameraControlColorCorrectionBottomContainer {
+    margin-bottom: 1em;
+    display: inline-flex;
+    align-items: center;
+}
+
+#cameraControlColorCorrectionBottomContainer button {
+    margin: 0px 0.5em;
+}
+
+#cameraControlColorCorrectionNumbersContainer span {
+    margin: 0px 0.5em;
+    text-decoration: underline 3px;
 }
 
 /* Exposure Section */
-.cameraControlExposureContainer {
+#cameraControlExposureContainer {
     width: 100%;
-    height: 4.4vh;
+    height: 4.7vh;
     background-color: #171717;
     border-top: 1px solid #2d2d2d;
     border-bottom: 1px solid #2d2d2d;
     display: inline-flex;
     justify-content: space-evenly;
     overflow: hidden;
-}
-
-.selectedCam .cameraControlExposureContainer {
-    border-top: 1px solid #3a3a3a;
-    border-bottom: 1px solid #3a3a3a;
 }
 
 .ccExposureSettingContainer {
@@ -141,7 +320,7 @@ body {
 }
 
 /* Lens Stuff */
-.cameraControlLensContainer {
+#cameraControlLensContainer {
     width: 100%;
     height: 41.9vh;
     border-bottom: 1px solid black;
@@ -159,19 +338,20 @@ body {
     margin-bottom: 1em;
 }
 
-.lensSliderContainer button {
-    margin-top: 1em;
-    margin-bottom: 1em;
+.circleButton {
+    width: 2em;
+    height: 2em;
+    border-radius: 1em;
+    padding: 0;
+    margin: 1em 0;
 }
 
-input[type=range][orient=vertical] {
-    -webkit-appearance: slider-vertical;
-    width: 2vw;
-    height: 80%;
+#transportControls .circleButton {
+    margin: 0 0.5em;
 }
 
 /* Right side (expanded) */
-.cameraControlsContainerExpanded {
+#cameraControlsContainerExpanded {
     width: 84.75vw;
     height: 100%;
     background: #282828;
@@ -180,39 +360,43 @@ input[type=range][orient=vertical] {
     flex-shrink: 0;
 }
 
-.cameraControlExpandedHeadContainer {
+#cameraControlExpandedHeadContainer {
     width: 100%;
     height: 5vh;
     border-bottom: 2px solid black;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
-.timecodeLabel {
+#cameraControlExpandedBodyContainer {
+    flex-direction: column;
+    display: inline-flex;
+    height: inherit;
+    justify-content: space-around;
+}
+
+#timecodeLabel {
+    
+}
+
+/* Table Controls */
+
+.tableControl {
+    margin-left: 1.5vw;
+}
+
+.tableControl h3 {
     font-weight: 100;
-    color: white;
-    margin-inline-start: 0.6em;
-    margin-inline-end: 0.6em;
+    margin: 0.5vh 0vw;
 }
 
-/* Connection Settings */
-.connectionContainer {
-    margin: 1.5vw;
+table, td {
+    margin-left: 0.5vw;
+    /* border: 1px solid white; */
+    border-collapse: collapse;
+    padding: 0.1vw 1vw;
 }
 
-input[type=text] {
-    border-radius: 0.5vh;
-    background: rgb(30, 30, 30);
-    color: white;
-    height: 2em;
-    width: 10vw;
-    border: 1px solid rgb(20, 20, 20);
-    margin-left: 1vw;
-    text-align: center;
-    font-family: 'NotoSansDisplay', sans-serif;
-    outline: none;
-}
-
-input[type=text]:focus {
-    border: 1px solid rgb(150, 58, 0);
+td, tr {
+    align-items: center;
 }
