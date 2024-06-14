@@ -33,9 +33,9 @@ Not all camera and lens combinations are supported by the API (Some cameras have
 The app polls data from the camera every ten seconds (you'll see "Refreshing..." in the corner). When you change a setting in the browser, it relays that to the camera and verifies the change. If you make a change that reverts after a few seconds, that means the camera rejected it. The page can be manually refreshed with the button in the bottom left corner.
 
 ### Arrows, Buttons, and Text Boxes
-Many controls work both with sliders/buttons, but if you want to enter a specific value then click on the number and enter the value manually.
+Many controls work with sliders/buttons, but if you want to enter a specific value then click on the number and enter the value manually.
 <br>
-(Sometimes this might take a couple of tries).
+(Sometimes this might take a couple of tries. I'm working on it.)
 <br>
 
 ### Media Management
@@ -74,6 +74,7 @@ If any of this information is incorrect, please let me know in the Issues sectio
 ## Known Issues
 - Page responsiveness
 - Editable spans are hard to use
+- Default slider elements look bad
 
 ## Unknown Issues
 Please report issues to the repo's issue tracker so I can fix them!
