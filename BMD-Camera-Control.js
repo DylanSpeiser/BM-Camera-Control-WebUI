@@ -1,27 +1,40 @@
+/*      Blackmagic Camera Control JS Class
+        Written based on the Camera Control
+        API Documentation from Blackmagic's
+        Developer info website.
+
+        (c) Dylan Speiser 2024              
+        github.com/DylanSpeiser
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Affero General Public License as published.
+
+        This program is distributed in the hope that it will be useful but without
+        any warranty; without even the implied warranty of merchantability or fitness
+        for a particular purpose as specified by the License, which you should consult
+        for more details at LICENSE.txt in this repository.
+*/
+
 class BMDCamera {
     // Pretty name and network hostname (strings)
     name;
     hostname;
     APIAddress;
 
-    // Camera index, used for muticam support
-    index;
-
-    // Codec and Video Formats (JSON object)
+    // Codec and Video Format (JSON object)
     format;
 
     // Current Transport Mode (string)
     transportMode;
 
-    // Playback state (JSON object)
+    // Current Playback state (JSON object)
     playbackState;
 
-    // Record state (JSON object)
+    // Current Record state (JSON object)
     recordState;
 
     // Timecode (JSON Object)
     timecode;
-    // (pack the source into here also)
 
     // Presets (JSON object)
     presets;
@@ -70,28 +83,39 @@ class BMDCamera {
     CCcolor;
     CClumacontribution;
 
-    // Keep track of unimplemented functions on the camera (array of strings)
+    // Keep track of unimplemented functions on the camera (array of endpoint strings)
     UnimplementedFunctionality = [];
 
+    // UI refreshing functions, will get called after every get method to keep the UI updated,
+    // For BYOUI purposes (Bring-Your-Own-UI). If you're using this class for your own UI, 
+    //  set this function to point to your UI updater.
+    static updateUIAll() {};
+    static updateUIname() {};
+    static updateUIhostname() {};
+    static updateUIFormat() {};
+    static updateUITransportMode() {};
+    static updateUIPlaybackState() {};
+    static updateUIRecordState() {};
+    static updateUITimecode() {};
+    static updateUIPresets() {};
+    static updateUIActivePreset() {};
+    static updateUIAperture() {};
+    static updateUIZoom() {};
+    static updateUIFocus() {};
+    static updateUIISO() {};
+    static updateUIgain() {};
+    static updateUIWhiteBalance() {};
+    static updateUINDStop() {};
+    static updateUIshutter() {};
+    static updateUIAutoExposureMode() {};
+    static updateUIColorCorrection() {};
+    static updateUILinks() {};
+
     // ============= CONSTRUCTOR ================
-    constructor(hostname, index) {
+    constructor(hostname) {
         this.hostname = hostname;
-        this.index = index;
         this.APIAddress = "http://"+hostname+"/control/api/v1";
         this.name = this.hostname.replace(".local","").replaceAll("-"," ");
-
-        this.refresh();
-    }
-
-    // Important refreshing function
-    refresh() {
-        document.getElementById("refreshingText").classList.add("refreshing");
-        this.getAllInfo();
-        sleep(200).then(() => {
-                this.updateUIAll();
-                document.getElementById("refreshingText").classList.remove("refreshing");
-            }
-        ); 
     }
 
     // Wrapper for API call, returns the JSON object from the camera
@@ -99,6 +123,7 @@ class BMDCamera {
         // Ask the camera a question
         let response;
         
+        // Only send the request if it's not an Unimplemented Function
         if (this.UnimplementedFunctionality.indexOf(endpoint) < 0) {
             response = await sendRequest("GET",this.APIAddress+endpoint,"");
         } else {
@@ -114,447 +139,318 @@ class BMDCamera {
         return response
     }
 
-    // Wrapper for API call, returns whatever the camera sent back in response
+    // Wrapper for API call, sends data to the camera.
     async pushData(endpoint, data) {
         return await sendRequest("PUT",this.APIAddress+endpoint,data);
     }
 
-    // ======= UI Updaters ==========
-    updateUIAll() {
-        this.updateUIname();
-        this.updateUIhostname();
-        this.updateUIFormat();
-        this.updateUITransportMode();
-        this.updateUIPlaybackState();
-        this.updateUIRecordState();
-        this.updateUITimecode();
-        this.updateUIPresets();
-        this.updateUIActivePreset();
-        this.updateUIAperture();
-        this.updateUIZoom();
-        this.updateUIFocus();
-        this.updateUIISO();
-        this.updateUIgain();
-        this.updateUIWhiteBalance();
-        this.updateUINDStop();
-        this.updateUIshutter();
-        this.updateUIAutoExposureMode();
-        this.updateUIColorCorrection();
-        this.updateUILinks();
-    }
-
-    updateUIname() {
-        document.getElementById("cameraName").innerHTML = this.name;
-    }
-
-    updateUIhostname() {
-        document.getElementById("hostnameInput").value = this.hostname;
-    }
-
-    updateUIFormat() {
-        document.getElementById("formatCodec").innerHTML = this.format.codec.toUpperCase().replace(":"," ").replace("_",":");
-        
-        let resObj = this.format.recordResolution;
-        document.getElementById("formatResolution").innerHTML = resObj.width + "x" + resObj.height;
-        document.getElementById("formatFPS").innerHTML = this.format.frameRate+" fps";
-    }
-
-    updateUITransportMode() {
-        //TBD
-    }
-
-    updateUIPlaybackState() {
-        //TBD
-    }
-
-    updateUIRecordState() {
-        if (this.recordState.recording) {
-            document.getElementById("cameraControlHeadContainer").classList.add("liveCam");
-            document.getElementById("cameraControlExpandedHeadContainer").classList.add("liveCam");
-        } else {
-            document.getElementById("cameraControlHeadContainer").classList.remove("liveCam");
-            document.getElementById("cameraControlExpandedHeadContainer").classList.remove("liveCam");
-        }
-    }
-
-    updateUITimecode() {
-        var tcString = parseInt(this.timecode.timecode.toString(16),10).toString().padStart(8,'0').match(/.{1,2}/g).join(':');
-
-        document.getElementById("timecodeLabel").innerHTML = tcString;
-    }
-
-    updateUIPresets() {
-        var presetsList = document.getElementById("presetsDropDown");
-
-        presetsList.innerHTML = "";
-
-        this.presets.forEach((presetItem) => {
-            let presetName = presetItem.split('.', 1);
-
-            let textNode = document.createTextNode(presetName);
-            let optionNode = document.createElement("option");
-            optionNode.setAttribute("name", "presetOption"+presetName);
-            optionNode.appendChild(textNode);
-            document.getElementById("presetsDropDown").appendChild(optionNode);
-        });
-    }
-
-    updateUIActivePreset() {
-        var presetsList = document.getElementById("presetsDropDown");
-
-        presetsList.childNodes.forEach((child) => {
-            if (child.nodeName == 'OPTION' && child.value == cameras[ci].activePreset) {
-                child.selected=true
-            } else {
-                child.selected=false
-            }
-        })
-    }
-
-    updateUIAperture() {
-        document.getElementById("irisRange").value = this.apertureNormalised;
-        document.getElementById("apertureStopsLabel").innerHTML = this.apertureStop.toFixed(1);
-    }
-
-    updateUIZoom() {
-        document.getElementById("zoomRange").value = this.zoomNormalised;
-        document.getElementById("zoomMMLabel").innerHTML = this.zoomMM;
-    }
-
-    updateUIFocus() {
-        document.getElementById("focusRange").value = this.focusNormalised;
-    }
-
-    updateUIISO() {
-        document.getElementById("ISOInput").value = this.ISO;
-    }
-
-    updateUIgain() {
-        var gainString = "";
-
-        if (this.gain >= 0) {
-            gainString = "+"+this.gain+"db"
-        } else {
-            gainString = this.gain+"db"
-        }
-
-        document.getElementById("gainSpan").innerHTML = gainString;
-    }
-
-    updateUIWhiteBalance() {
-        document.getElementById("whiteBalanceSpan").innerHTML = this.WhiteBalance+"K";
-        document.getElementById("whiteBalanceTintSpan").innerHTML = this.WhiteBalanceTint;
-    }
-
-    updateUINDStop() {
-        document.getElementById("ndFilterSpan").innerHTML = this.NDStop;
-        if (this.UnimplementedFunctionality.includes("/video/ndFilter")) {
-            document.getElementById("ndFilterSpan").innerHTML = 0;
-            document.getElementById("ndFilterSpan").disabled = true;
-        }
-    }
-
-    updateUIshutter() {
-        var shutterString = ""
-
-        if ('shutterSpeed' in this.shutter) {
-            shutterString = "1/"+this.shutter.shutterSpeed
-        } else {
-            var shangleString = (this.shutter.shutterAngle / 100).toFixed(1).toString()
-            if (shangleString.indexOf(".0") > 0) {
-                shutterString = parseFloat(shangleString).toFixed(0)+"°";
-            } else {
-                shutterString = shangleString+"°";
-            }
-        }
-
-        document.getElementById("shutterSpan").innerHTML = shutterString;
-    }
-
-    updateUIAutoExposureMode() {
-        let AEmodeSelect = document.getElementById("AEmodeDropDown");
-        let AEtypeSelect = document.getElementById("AEtypeDropDown");
-
-        AEmodeSelect.value = cameras[ci].AutoExposureMode.mode;
-        AEtypeSelect.value = cameras[ci].AutoExposureMode.type;
-    }
-
-    updateUIColorCorrection() {
-        // Lift
-        document.getElementsByClassName("CClumaLabel")[0].innerHTML = this.CClift.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[0].innerHTML = this.CClift.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[0].innerHTML = this.CClift.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[0].innerHTML = this.CClift.blue.toFixed(2);
-
-        // Gamma
-        document.getElementsByClassName("CClumaLabel")[1].innerHTML = this.CCgamma.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[1].innerHTML = this.CCgamma.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[1].innerHTML = this.CCgamma.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[1].innerHTML = this.CCgamma.blue.toFixed(2);
-
-        // Gain
-        document.getElementsByClassName("CClumaLabel")[2].innerHTML = this.CCgain.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[2].innerHTML = this.CCgain.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[2].innerHTML = this.CCgain.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[2].innerHTML = this.CCgain.blue.toFixed(2);
-
-        // Offset
-        document.getElementsByClassName("CClumaLabel")[3].innerHTML = this.CCoffset.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[3].innerHTML = this.CCoffset.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[3].innerHTML = this.CCoffset.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[3].innerHTML = this.CCoffset.blue.toFixed(2);
-    
-        // Contrast
-        document.getElementById("CCcontrastPivotRange").value = this.CCcontrast.pivot;
-        document.getElementById("CCcontrastPivotLabel").innerHTML = this.CCcontrast.pivot.toFixed(2);
-        document.getElementById("CCcontrastAdjustRange").value = this.CCcontrast.adjust;
-        document.getElementById("CCcontrastAdjustLabel").innerHTML = this.CCcontrast.adjust.toFixed(2);
-        
-        // Color
-        document.getElementById("CChueRange").value = this.CCcolor.hue;
-        document.getElementById("CCcolorHueLabel").innerHTML = this.CCcolor.hue.toFixed(2);
-        
-        document.getElementById("CCsaturationRange").value = this.CCcolor.saturation;
-        document.getElementById("CCcolorSatLabel").innerHTML = this.CCcolor.saturation.toFixed(2);
-
-        document.getElementById("CClumaContributionRange").value = this.CClumacontribution.lumaContribution;
-        document.getElementById("CCcolorLCLabel").innerHTML = this.CClumacontribution.lumaContribution.toFixed(2);
-    }
-
-    updateUILinks() {
-        document.getElementById("documentationLink").href = "http://"+this.hostname+"/control/documentation.html";
-        document.getElementById("mediaManagerLink").href = "http://"+this.hostname;
-    }
-
     // =============== GETTERS ==================
 
-    // name, hostname, APIaddress, index handled by constructor
+    // name, hostname, APIaddress handled by constructor
+    // since these are all asynchronous, they will return promises to use with await or .then()
 
-    getFormat() {
-        this.pullData("/system/format").then((value) => {this.format = value; this.updateUIFormat()});
+    async getFormat() {
+       this.format = await this.pullData("/system/format");
+       BMDCamera.updateUIFormat();
+       return this.format;
     }
 
-    getTransportMode() {
-        this.pullData("/transports/0").then((value) => {this.transportMode = value; this.updateUITransportMode()});
+    async getTransportMode() {
+        this.transportMode = await this.pullData("/transports/0");
+        BMDCamera.updateUITransportMode();
+        return this.transportMode;
     }
 
-    getPlaybackState() {
-        this.pullData("/transports/0/playback").then((value) => {this.playbackState = value; this.updateUIPlaybackState()});
+    async getPlaybackState() {
+        this.playbackState = await this.pullData("/transports/0/playback");
+        BMDCamera.updateUIPlaybackState();
+        return this.playbackState;
     }
 
-    getRecordState() {
-        this.pullData("/transports/0/record").then((value) => {this.recordState = value; this.updateUIRecordState()});
+    async getRecordState() {
+        this.recordState = await this.pullData("/transports/0/record");
+        BMDCamera.updateUIRecordState();
+        return this.recordState;
     }
 
-    getTimecode() {
-        this.pullData("/transports/0/timecode").then((value) => {this.timecode = value; this.updateUITimecode()});
-        this.pullData("/transports/0/timecode/source").then((value) => {this.timecode.source = value.source});
+    async getTimecode() {
+        this.timecode = await this.pullData("/transports/0/timecode");
+        BMDCamera.updateUITimecode();
+        return this.timecode;
     }
 
-    getPresets() {
-        this.pullData("/presets").then((value) => {this.presets = value.presets; this.updateUIPresets()});
+    async getPresets() {
+        this.pullData("/presets").then((value) => {this.presets = value.presets; BMDCamera.updateUIPresets();});
+        return this.presets;
     }
 
-    getActivePreset() {
-        this.pullData("/presets/active").then((value) => {this.activePreset = value; this.updateUIActivePreset()});
+    async getActivePreset() {
+        this.activePreset = await this.pullData("/presets/active");
+        BMDCamera.updateUIActivePreset();
+        return this.activePreset;
     }
 
-    getAperture() {
-        this.pullData("/lens/iris").then((value) => {this.apertureStop = value.apertureStop; this.apertureNormalised = value.normalised; this.updateUIAperture()});
+    async getAperture() {
+        this.pullData("/lens/iris").then((value) => {this.apertureStop = value.apertureStop; this.apertureNormalised = value.normalised; BMDCamera.updateUIAperture();});
+        return this.apertureNormalised;
     }
 
-    getZoom() {
-        this.pullData("/lens/zoom").then((value) => {this.zoomMM = value.focalLength; this.zoomNormalised = value.normalised; this.updateUIZoom()});
+    async getZoom() {
+        this.pullData("/lens/zoom").then((value) => {this.zoomMM = value.focalLength; this.zoomNormalised = value.normalised; BMDCamera.updateUIZoom();});
+        return this.zoomNormalised;
     }
 
-    getFocus() {
-        this.pullData("/lens/focus").then((value) => {this.focusNormalised = value.normalised; this.updateUIFocus()});
+    async getFocus() {
+        this.pullData("/lens/focus").then((value) => {this.focusNormalised = value.normalised; BMDCamera.updateUIFocus();});
+        return this.focusNormalised;
     }
 
-    getISO() {
-        this.pullData("/video/iso").then((value) => {this.ISO = value.iso; this.updateUIISO()});
+    async getISO() {
+        this.pullData("/video/iso").then((value) => {this.ISO = value.iso; BMDCamera.updateUIISO();});
+        return this.ISO;
     }
 
-    getGain() {
-        this.pullData("/video/gain").then((value) => {this.gain = value.gain; this.updateUIgain()});
+    async getGain() {
+        this.pullData("/video/gain").then((value) => {this.gain = value.gain; BMDCamera.updateUIgain();});
+        return this.gain;
     }
 
-    getWhiteBalance() {
+    async getWhiteBalance() {
         this.pullData("/video/whiteBalance").then((value) => {this.WhiteBalance = value.whiteBalance});
-        this.pullData("/video/whiteBalanceTint").then((value) => {this.WhiteBalanceTint = value.whiteBalanceTint; this.updateUIWhiteBalance()});
+        this.pullData("/video/whiteBalanceTint").then((value) => {this.WhiteBalanceTint = value.whiteBalanceTint; BMDCamera.updateUIWhiteBalance();});
+        return this.WhiteBalance;
     }
 
-    getND() {
-        this.pullData("/video/ndFilter").then((value) => {this.NDStop = value.stop; this.updateUINDStop()});
-        this.pullData("/video/ndFilter/displayMode").then((value) => {this.NDMode = value.displayMode});
+    async getND() {
+        this.pullData("/video/ndFilter").then((value) => {this.NDStop = value.stop});
+        this.pullData("/video/ndFilter/displayMode").then((value) => {this.NDMode = value.displayMode; BMDCamera.updateUINDStop();});
+        return this.NDStop;
     }
 
-    getShutter() {
-        this.pullData("/video/shutter").then((value) => {this.shutter = value; this.updateUIshutter()});
+    async getShutter() {
+        this.shutter = await this.pullData("/video/shutter");
+        BMDCamera.updateUIshutter();
+        return this.shutter;
     }
 
-    getAutoExposureMode() {
-        this.pullData("/video/autoExposure").then((value) => {this.AutoExposureMode = value; this.updateUIAutoExposureMode()});
+    async getAutoExposureMode() {
+        this.AutoExposureMode = await this.pullData("/video/autoExposure");
+        BMDCamera.updateUIAutoExposureMode();
+        return this.AutoExposureMode;
     }
 
-    getColorCorrection() {
-        this.pullData("/colorCorrection/lift").then((value) => {this.CClift = value});
-        this.pullData("/colorCorrection/gamma").then((value) => {this.CCgamma = value});
-        this.pullData("/colorCorrection/gain").then((value) => {this.CCgain = value});
-        this.pullData("/colorCorrection/offset").then((value) => {this.CCoffset = value});
-        this.pullData("/colorCorrection/contrast").then((value) => {this.CCcontrast = value});
-        this.pullData("/colorCorrection/color").then((value) => {this.CCcolor = value});
-        this.pullData("/colorCorrection/lumaContribution").then((value) => {this.CClumacontribution = value; this.updateUIColorCorrection()});
+    // This one just fetches the data and stores it in the normal objects. No return value.
+    async getColorCorrection() {
+        this.CClift = await this.pullData("/colorCorrection/lift");
+        this.CCgamma = await this.pullData("/colorCorrection/gamma");
+        this.CCgain = await this.pullData("/colorCorrection/gain");
+        this.CCoffset = await this.pullData("/colorCorrection/offset");
+        this.CCcontrast = await this.pullData("/colorCorrection/contrast");
+        this.CCcolor = await this.pullData("/colorCorrection/color");
+        this.CClumacontribution = await this.pullData("/colorCorrection/lumaContribution");
+        BMDCamera.updateUIColorCorrection();
     }
 
-    getAllInfo() {
-        this.getFormat();
-        this.getTransportMode();
-        this.getPlaybackState();
-        this.getRecordState();
-        this.getTimecode();
-        this.getPresets();
-        this.getActivePreset();
-        this.getAperture();
-        this.getZoom();
-        this.getFocus();
-        this.getISO();
-        this.getGain();
-        this.getWhiteBalance();
-        this.getND();
-        this.getShutter();
-        this.getAutoExposureMode();
-        this.getColorCorrection();
+    // This method usually takes 200-250 ms
+    async getAllInfo() {
+        await this.getFormat();
+        await this.getTransportMode();
+        await this.getPlaybackState();
+        await this.getRecordState();
+        await this.getTimecode();
+        await this.getPresets();
+        await this.getActivePreset();
+        await this.getAperture();
+        await this.getZoom();
+        await this.getFocus();
+        await this.getISO();
+        await this.getGain();
+        await this.getWhiteBalance();
+        await this.getND();
+        await this.getShutter();
+        await this.getAutoExposureMode();
+        await this.getColorCorrection();
     }
 
     // =============== SETTERS ==================
 
-    // name, hostname, APIaddress, index should never have to be set
+    // name, hostname, APIaddress should never have to be set
 
-    setCodecFormat(newCodecFormatObject) {
-        this.pushData("/system/codecFormat",newCodecFormatObject).then(() => sleep(1000).then(() => this.getCodecFormat()));
+    async setCodecFormat(newCodecFormatObject) {
+        await this.pushData("/system/codecFormat",newCodecFormatObject);
+        await sleep(500);
+        await this.getCodecFormat();
     }
 
-    setVideoFormat(newVideoFormatObject) {
-        this.pushData("/system/videoFormat",newVideoFormatObject).then(() => sleep(1000).then(() => this.getCodecFormat()));
+    async setVideoFormat(newVideoFormatObject) {
+        await this.pushData("/system/videoFormat",newVideoFormatObject);
+        await sleep(500);
+        await this.getCodecFormat();
     }
 
-    setTransportMode(newTransportModeString) {
-        this.pushData("/transports/0",{"mode": newTransportModeString}).then(() => sleep(1000).then(() => this.getTransportMode()));
+    async setTransportMode(newTransportModeString) {
+        await this.pushData("/transports/0",{"mode": newTransportModeString});
+        await sleep(500);
+        await this.getTransportMode();
     }
 
-    setPlaybackState(playbackStateObject) {
-        this.pushData("/transports/0/playback",playbackStateObject).then(() => sleep(1000).then(() => this.getPlaybackState()));
+    async setPlaybackState(playbackStateObject) {
+        await this.pushData("/transports/0/playback",playbackStateObject);
+        await sleep(500);
+        await this.getPlaybackState();
     }
 
-    sendPresetFile(file) {
-        sendRequest("POST",this.APIAddress+"/presets",file)
+    async sendPresetFile(file) {
+        await sendRequest("POST",this.APIAddress+"/presets",file);
     }
 
-    setActivePreset(presetString) {
-        this.pushData("/presets/active",{"preset": presetString}).then(() => sleep(1000).then(() => this.refresh()));
+    async setActivePreset(presetString) {
+        await this.pushData("/presets/active",{"preset": presetString});
+        await sleep(500);
+        await this.getAllInfo();
     }
 
-    updatePreset(presetString) {
-        this.pushData("/presets/active",{"preset": presetString}).then(() => sleep(1000).then(() => this.getPresets()));
+    async updatePreset(presetString) {
+        await this.pushData("/presets/active",{"preset": presetString});
+        await sleep(500);
+        await this.getPresets();
     }
 
-    setAperture(apertureNormalisedFloat) {
-        this.pushData("/lens/iris",{"normalised": apertureNormalisedFloat}).then(() => sleep(1000).then(() => this.getAperture()));
+    async setAperture(apertureNormalisedFloat) {
+        await this.pushData("/lens/iris",{"normalised": apertureNormalisedFloat});
+        await sleep(1500);
+        await this.getAperture();
     }
 
-    setZoom(zoomNormalisedFloat) {
-        this.pushData("/lens/zoom",{"normalised": zoomNormalisedFloat}).then(() => sleep(1000).then(() => this.getZoom()));
+    async setZoom(zoomNormalisedFloat) {
+        await this.pushData("/lens/zoom",{"normalised": zoomNormalisedFloat});
+        await sleep(1500);
+        await this.getZoom();
     }
 
-    setFocus(focusNormalisedFloat) {
-        this.pushData("/lens/focus",{"normalised": focusNormalisedFloat}).then(() => sleep(1000).then(() => this.getFocus()));
+    async setFocus(focusNormalisedFloat) {
+        await this.pushData("/lens/focus",{"normalised": focusNormalisedFloat});
+        await sleep(1500);
+        await this.getFocus();
     }
 
-    setISO(ISOint) {
-        this.pushData("/video/iso",{"iso":ISOint}).then(() => sleep(1000).then(() => this.getISO()));
+    async setISO(ISOint) {
+        await this.pushData("/video/iso",{"iso":ISOint});
+        await sleep(500);
+        await this.getISO();
+        await this.getGain();
     }
 
-    setGain(gainInt) {
-        this.pushData("/video/gain",{"gain":gainInt}).then(() => sleep(1000).then(() => this.getGain()));
+    async setGain(gainInt) {
+        await this.pushData("/video/gain",{"gain":gainInt});
+        await sleep(500);
+        await this.getGain();
+        await this.getISO();
     }
 
-    setWhiteBalance(whiteBalanceInt, whiteBalanceTintInt) {
-        this.pushData("/video/whiteBalance",{"whiteBalance": whiteBalanceInt});
-        this.pushData("/video/whiteBalanceTint",{"whiteBalanceTint": whiteBalanceTintInt}).then(() => sleep(1000).then(() => this.getWhiteBalance()));
+    async setWhiteBalance(whiteBalanceInt, whiteBalanceTintInt) {
+        await this.pushData("/video/whiteBalance",{"whiteBalance": whiteBalanceInt});
+        await this.pushData("/video/whiteBalanceTint",{"whiteBalanceTint": whiteBalanceTintInt});
+        await sleep(500);
+        await this.getWhiteBalance();
     }
 
-    setND(NDstopInt) {
-        this.pushData("/video/ndFilter",{"stop": NDstopInt}).then(() => sleep(1000).then(() => this.getND()));
+    async setND(NDstopInt) {
+        await this.pushData("/video/ndFilter",{"stop": NDstopInt});
+        await sleep(500);
+        await this.getND();
     }
 
-    setNDDisplayMode(displayModeString) {
-        this.pushData("/video/ndFilter/displayMode",{"displayMode": displayModeString}).then(() => sleep(1000).then(() => this.getND()));
+    async setNDDisplayMode(displayModeString) {
+        await this.pushData("/video/ndFilter/displayMode",{"displayMode": displayModeString});
+        await sleep(500);
+        await this.getND();
     }
 
     // Accepts JSON obejcts with either shutterSpeed or shutterAngle properties
-    // Note that shutterAngle is 100x the displayed value
-    setShutter(shutterObject) {
-        this.pushData("/video/shutter",shutterObject).then(() => sleep(1000).then(() => this.getShutter()));
+    // Note that the shutterAngle value returned by the API is 100x the actual value
+    async setShutter(shutterObject) {
+        await this.pushData("/video/shutter",shutterObject);
+        await sleep(500);
+        await this.getShutter();
     }
 
-    setAutoExposureMode(AEmodeObject) {
-        this.pushData("/video/autoExposure",AEmodeObject).then(() => sleep(1000).then(() => this.getAutoExposureMode()));
+    async setAutoExposureMode(AEmodeObject) {
+        await this.pushData("/video/autoExposure",AEmodeObject);
+        await sleep(500);
+        await this.getAutoExposureMode();
     }
 
-    setCCLift(CCliftObject) {
-        this.pushData("/colorCorrection/lift",CCliftObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCLift(CCliftObject) {
+        await this.pushData("/colorCorrection/lift",CCliftObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCGamma(CCgammaObject) {
-        this.pushData("/colorCorrection/gamma",CCgammaObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCGamma(CCgammaObject) {
+        await this.pushData("/colorCorrection/gamma",CCgammaObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCGain(CCgainObject) {
-        this.pushData("/colorCorrection/gain",CCgainObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCGain(CCgainObject) {
+        await this.pushData("/colorCorrection/gain",CCgainObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCOffset(CCoffsetObject) {
-        this.pushData("/colorCorrection/offset",CCoffsetObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCOffset(CCoffsetObject) {
+        await this.pushData("/colorCorrection/offset",CCoffsetObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCContrast(CCcontrastObject) {
-        this.pushData("/colorCorrection/contrast",CCcontrastObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCContrast(CCcontrastObject) {
+        await this.pushData("/colorCorrection/contrast",CCcontrastObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCColor(CCcolorObject) {
-        this.pushData("/colorCorrection/color",CCcolorObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCColor(CCcolorObject) {
+        await this.pushData("/colorCorrection/color",CCcolorObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
-    setCCLumaContribuion(CClumacontributionObject) {
-        this.pushData("/colorCorrection/lumaContribution",CClumacontributionObject).then(() => sleep(1000).then(() => this.getColorCorrection()));
+    async setCCLumaContribuion(CClumacontributionObject) {
+        await this.pushData("/colorCorrection/lumaContribution",CClumacontributionObject);
+        await sleep(500);
+        await this.getColorCorrection();
     }
 
     // =============== Other Commands =======================
-    doAutoFocus() {
-        this.pushData("/lens/focus/doAutoFocus").then(() => sleep(1500).then(() => this.getFocus()));
+    async doAutoFocus() {
+        await this.pushData("/lens/focus/doAutoFocus");
+        sleep(1500).then(() => this.getFocus());
     }
 
-    play() {
-        this.pushData("/transports/0/play").then(() => sleep(1000).then(() => this.getPlaybackState()));
+    async play() {
+        await this.pushData("/transports/0/play");
+        await sleep(500);
+        await this.getPlaybackState();
     }
 
-    record() {
-        this.pushData("/transports/0/record",{"recording": true}).then(() => {
-            sleep(2000).then(() => this.getRecordState());
-        });
+    async record() {
+        await this.pushData("/transports/0/record",{"recording": true});
+        await sleep(1000);
+        await this.getRecordState();
     }
 
-    stopTransport() {
-        this.pushData("/transports/0/stop").then(() => {
-            sleep(2000).then(() => this.getPlaybackState());
-        });
+    async stopTransport() {
+        await this.pushData("/transports/0/stop");
+        await sleep(1000);
+        await this.getPlaybackState();
     }
 
-    stopRecord() {
-        this.pushData("/transports/0/record",{"recording": false}).then(() => {
-            sleep(2000).then(() => this.getRecordState());
-        });
+    async stopRecord() {
+        await this.pushData("/transports/0/record",{"recording": false});
+        await sleep(1000);
+        await this.getRecordState();
     }
 }
 
@@ -582,3 +478,6 @@ async function sendRequest(method, url, data) {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/* (c) Dylan Speiser 2024              
+   github.com/DylanSpeiser */

@@ -1,13 +1,19 @@
+/* Sorry the CSS is such a mess. -DS */
+
 /* ============= WHOLE PAGE STYLES ================== */
 
 /* Handle vertical screens */
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
     #cameraControlsContainer {
         width: 100vw!important;
     }
 
     #cameraControlsContainerExpanded {
         display: none;
+    }
+
+    body {
+        font-size: 90%;
     }
 }
 

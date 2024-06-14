@@ -1,3 +1,5 @@
+<!-- (c) 2024 Dylan Speiser -->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -58,10 +60,10 @@
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
                         <button class="CCResetButton circleButton" onclick="resetCC(0)" title="Reset Lift">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(0)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(0)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(0)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(0)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(0)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(0)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(0)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(0)}">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(0)" title="Set Lift">&#10138</button>
                     </div>
@@ -70,10 +72,10 @@
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
                         <button class="CCResetButton circleButton" onclick="resetCC(1)" title="Reset Gamma">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(1)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(1)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(1)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(1)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(1)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(1)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(1)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(1)}">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(1)" title="Set Gamma">&#10138</button>
                     </div>
@@ -82,10 +84,10 @@
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
                         <button class="CCResetButton circleButton" onclick="resetCC(2)" title="Reset Gain">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(2)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(2)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(2)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(2)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(2)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(2)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(2)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(2)}">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(2)" title="Set Gain">&#10138</button>
                     </div>
@@ -95,10 +97,10 @@
                     <div class="flexContainerH" id="cameraControlColorCorrectionBottomContainer">
                         <button class="CCResetButton circleButton" onclick="resetCC(3)" title="Reset Offset">&#10227</button>
                         <div class="flexContainerH" id="cameraControlColorCorrectionNumbersContainer">
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" oninput="setCCFromUI(3)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" oninput="setCCFromUI(3)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" oninput="setCCFromUI(3)">0.00</span>
-                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" oninput="setCCFromUI(3)">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #dbdbdb;" class="CClumaLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(3)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #e64b3d;" class="CCredLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(3)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #00a841;" class="CCgreenLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(3)}">0.00</span>
+                            <span contenteditable="plaintext-only" style="text-decoration-color: #2a78c8;" class="CCblueLabel" onkeydown="if (event.key === 'Enter') {event.preventDefault(); setCCFromUI(3)}">0.00</span>
                         </div>
                         <button id="CCHamburgerButton" class="circleButton" onclick="setCCFromUI(3)" title="Set Offset">&#10138</button>
                     </div>
@@ -109,7 +111,7 @@
                         <span class="exposureControlLabel">FILTER</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseND()" id="NDL">&#9664</a>
-                            <span id="ndFilterSpan" contenteditable="plaintext-only" oninput="cameras[ci].setND(parseInt(this.innerHTML))">0</span>
+                            <span id="ndFilterSpan" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setND(parseInt(this.innerHTML))}">0</span>
                             <a class="expAdjArr" href="#" onclick="increaseND()" id="NDR">&#9654</a>
                         </div>
                     </div>
@@ -117,7 +119,7 @@
                         <span class="exposureControlLabel">GAIN</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseGain()" id="GAL">&#9664</a>
-                            <span id="gainSpan" contenteditable="plaintext-only" oninput="cameras[ci].setGain(parseInt(this.innerHTML))">+0db</span>
+                            <span id="gainSpan" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setGain(parseInt(this.innerHTML))}">+0db</span>
                             <a class="expAdjArr" href="#" onclick="increaseGain()" id="GAR">&#9654</a>
                         </div>
                     </div>
@@ -125,20 +127,20 @@
                         <span class="exposureControlLabel">SHUTTER</span>
                         <div class="ccExposureSettingValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseShutter()" id="SHL">&#9664</a>
-                            <span id="shutterSpan" contenteditable="plaintext-only" oninput="handleShutterInput(this.innerHTML)">1/50</span>
+                            <span id="shutterSpan" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); handleShutterInput(this.innerHTML)}">1/50</span>
                             <a class="expAdjArr" href="#" onclick="increaseShutter()" id="SHR">&#9654</a>
                         </div>
                     </div>
                     <div class="ccExposureSettingContainer">
-                        <span class="exposureControlLabel" onclick="swapWBMode()" id="WBLabel">BALANCE</span>
+                        <span class="exposureControlLabel" onclick="swapWBMode()" title="Click here to swap between WB and Tint" id="WBLabel">BALANCE</span>
                         <div class="ccExposureSettingValueContainer" id="WBValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseWhiteBalance()" id="WBL">&#9664</a>
-                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" oninput="cameras[ci].setWhiteBalance(parseInt(this.innerHTML),cameras[ci].whiteBalanceTint)">5600K</span>
+                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setWhiteBalance(parseInt(this.innerHTML),cameras[ci].whiteBalanceTint)}">5600K</span>
                             <a class="expAdjArr" href="#" onclick="increaseWhiteBalance()" id="WBR">&#9654</a>
                         </div>
                         <div class="ccExposureSettingValueContainer dNone" id="WBTintValueContainer">
                             <a class="expAdjArr" href="#" onclick="decreaseWhiteBalanceTint()" id="WBTL">&#9664</a>
-                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" oninput="cameras[ci].setWhiteBalance(cameras[ci].whiteBalance,parseInt(this.innerHTML))">0</span>
+                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setWhiteBalance(cameras[ci].whiteBalance,parseInt(this.innerHTML))}">0</span>
                             <a class="expAdjArr" href="#" onclick="increaseWhiteBalanceTint()" id="WBLR">&#9654</a>
                         </div>
                     </div>
@@ -193,7 +195,7 @@
                                     <td>Hostname</td>
                                     <td>
                                         <input type="text" placeholder="Studio-Camera-6K-Pro.local" id="hostnameInput">
-                                        <button onclick='initCamera(document.getElementById("hostnameInput").value, ci)'>Connect</button>
+                                        <button onclick='initCamera(document.getElementById("hostnameInput").value)'>Connect</button>
                                         <span id="connectionErrorSpan"></span>
                                     </td>
                                 </tr>
@@ -241,7 +243,7 @@
                             <table>
                                 <tr>
                                     <td>ISO</td>
-                                    <td><input type="number" id="ISOInput" step="100" oninput="cameras[ci].setISO(parseInt(this.value))"></td>
+                                    <td><input type="number" id="ISOInput" step="100" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setISO(parseInt(this.value))}"></td>
                                 </tr>
                                 <tr>
                                     <td>AE Mode</td>
@@ -276,7 +278,7 @@
                                     <td>Pivot</td>
                                     <td><input type="range" max="5" min="-5" step="0.001" id="CCcontrastPivotRange" onmouseup="cameras[ci].setCCContrast({'pivot': parseFloat(this.value)})"></td>
                                     <td>
-                                        <span id="CCcontrastPivotLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCContrast({'pivot': parseFloat(this.innerHTML)})">0</span>
+                                        <span id="CCcontrastPivotLabel" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setCCContrast({'pivot': parseFloat(this.innerHTML)})}">0</span>
                                     </td>
                                     <td rowspan="2">
                                         <button class="CCResetButton circleButton" onclick="resetCC(4)" title="Reset Contrast">&#10227</button>
@@ -286,7 +288,7 @@
                                     <td>Adjust</td>
                                     <td><input type="range" max="5" min="-5" step="0.001" id="CCcontrastAdjustRange" onmouseup="cameras[ci].setCCContrast({'adjust': parseFloat(this.value)})"></td>
                                     <td>
-                                        <span id="CCcontrastAdjustLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCContrast({'adjust': parseFloat(this.innerHTML)})">0</span>
+                                        <span id="CCcontrastAdjustLabel" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setCCContrast({'adjust': parseFloat(this.innerHTML)})}">0</span>
                                     </td>
                                 </tr>
                             </table>
@@ -299,7 +301,7 @@
                                     <td>Hue</td>
                                     <td><input type="range" max="1" min="-1" step="0.001" id="CChueRange" onmouseup="cameras[ci].setCCColor({'hue': parseFloat(this.value)})"></td>
                                     <td>
-                                        <span id="CCcolorHueLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCColor({'hue': parseFloat(this.innerHTML)})">0</span>
+                                        <span id="CCcolorHueLabel" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setCCColor({'hue': parseFloat(this.innerHTML)})}">0</span>
                                     </td>
                                     <td rowspan="3">
                                         <button class="CCResetButton circleButton" onclick="resetCC(5)" title="Reset Color">&#10227</button>
@@ -309,14 +311,14 @@
                                     <td>Saturation</td>
                                     <td><input type="range" max="2" min="0" step="0.001" id="CCsaturationRange" onmouseup="cameras[ci].setCCColor({'saturation': parseFloat(this.value)})"></td>
                                     <td>
-                                        <span id="CCcolorSatLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCColor({'saturation': parseFloat(this.innerHTML)})">0</span>
+                                        <span id="CCcolorSatLabel" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setCCColor({'saturation': parseFloat(this.innerHTML)})}">0</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Luma Contribution</td>
                                     <td><input type="range" max="1" min="0" step="0.001" id="CClumaContributionRange" onmouseup="cameras[ci].setCCLumaContribuion({'lumaContribution': parseFloat(this.value)})"></td>
                                     <td>
-                                        <span id="CCcolorLCLabel" contenteditable="plaintext-only" oninput="cameras[ci].setCCLumaContribuion({'lumaContribution': parseFloat(this.innerHTML)})">0</span>
+                                        <span id="CCcolorLCLabel" contenteditable="plaintext-only" onkeydown="if (event.key === 'Enter') {event.preventDefault(); cameras[ci].setCCLumaContribuion({'lumaContribution': parseFloat(this.innerHTML)})}">0</span>
                                     </td>
                                 </tr>
                             </table>
@@ -329,13 +331,14 @@
         <!-- Footer Div -->
         <div class="flexContainerH" id="footerContainer">
             <div id="footerLeft">
-                <button onclick="cameras.forEach((element) => {element.refresh()});">Refresh</button>
+                <button onclick="refresh();">Refresh</button>
                 <span id="refreshingText" class="refreshing">Refreshing...</span>
             </div>
             <div id="footerLinks">
                 <span><a id="documentationLink" href="#" target="_blank">YAML Documentation</a></span>
                 <span><a id="mediaManagerLink" href="#" target="_blank">Web Media Manager</a></span>
                 <span><a id="githubLink" href="#" target="https://github.com/DylanSpeiser/BM-Camera-Control-WebUI">GitHub</a></span>
+                <span class="">(v 1.0)</span>    
             </div>
         </div>
     </body>
