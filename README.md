@@ -1,5 +1,5 @@
 # BM Camera Control WebUI
-This web app is utilizes the [Blackmagic](https://blackmagicdesign.com) Camera Control REST API to control cameras via an extensible web interface. Modeled after the interface of ATEM Software Control, most of the camera's functions that can be controlled by the API are available here.
+This web app is utilizes the [Blackmagic](https://blackmagicdesign.com) Camera Control REST API to control cameras with a vanilla JS web interface. Modeled after the interface of ATEM Software Control, most of the camera's functions that can be controlled by the API are available here.
 
 >This program was written based on the official REST API documentation from Blackmagic, which can be found [here](https://documents.blackmagicdesign.com/DeveloperManuals/RESTAPIforBlackmagicCameras.pdf)
 
@@ -24,8 +24,6 @@ The app is a self-contained, offline web page. (No installation, dependencies, o
 If you don't know the hostname of your camera, you can find and/or change it in **Blackmagic Camera Setup**.
 <br>
 (The hostname is the camera's name with spaces replaced with dashes, and `.local` appended to the end)
-<br><br>
-Not all camera and lens combinations are supported by the API (Some cameras have ND filters, some don't. Some electronic zoom lenses work, some don't.)
 
 # Using the App
 
@@ -33,7 +31,7 @@ Not all camera and lens combinations are supported by the API (Some cameras have
 The app polls data from the camera every ten seconds (you'll see "Refreshing..." in the corner). When you change a setting in the browser, it relays that to the camera and verifies the change. If you make a change that reverts after a few seconds, that means the camera rejected it. The page can be manually refreshed with the button in the bottom left corner.
 
 ### Arrows, Buttons, and Text Boxes
-Many controls work both with sliders/buttons, but if you want to enter a specific value then click on the number and enter the value manually.
+Many controls work with sliders/buttons as well as manual input by clicking on the number and typing in a new value.
 
 ### Media Management
 To view files on the drives of your camera, follow the link in the bottom-right corder for the **Web Media Manager**. This will take you to *your camera's* internal web server where you can view, download, and upload video files over the network.
@@ -44,7 +42,7 @@ The page allows for the sending of manual API calls to the camera. Use the text 
 ### Layout
 Because the app is just a web page, you can open it in multiple browser windows at once. Resize the windows and you can monitor many cameras at the same time!
 
-![Vertical Screenshot](screenshots/WebUI2.png)
+<img src="screenshots/WebUI2.png" width=30%>
 
 I have done my best to make the page responsive, but every screen is different. If something looks off, adjust the zoom/scale of the window in your browser and that should fix things.
 
@@ -72,6 +70,9 @@ If any of this information is incorrect, please let me know in the Issues sectio
 It's open source, so feel free to modify the code to add new features or suit it to your setup. (Just don't sell it, okay?) It's all vanilla JavaScript and HTML so it's super easy to work with and modify. Fork it and make something cool!
 <br><br>
 If you like this project and want it to improve, consider making a Pull Request and I'll give it a look. Or, if coding isn't your thing, open an Issue in the repo's issue tracker.
+
+## Tutorials
+For more information about using the BMD REST API, check out [my tutorial series](https://github.com/DylanSpeiser/BM-API-Tutorial/) that explains the basics of how to interact with the camera in JavaScript and Python.
 
 ## Using `BMD-Camera-Control.js`
 You are more than welcome to use this JavaScript class in your own projects. Just include the file (with its attributions).
