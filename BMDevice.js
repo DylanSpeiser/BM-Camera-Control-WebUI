@@ -136,27 +136,29 @@ class BMDevice {
     // Boolean parameter, true = forward, false = backwards
     seek(direction) {
         let clips = this.GETdata("/timelines/0")?.clips;
-        let playbackData = this.GETdata("/transports/playback");
+        let playbackData = this.GETdata("/transports/0/playback");
 
         let runningSum = 0;
+        let currentClipFound = false;
         let currentClipIndex = 0;
         let clipStartingTimecodes = [];
         let i = 0;
 
         clips.forEach((clip) => {
-            if (runningSum+clip.frameCount > playbackData.position) {
+            if ((runningSum+clip.frameCount > playbackData.position) && !currentClipFound) {
                 currentClipIndex = i;
+                currentClipFound = true;
             }
             clipStartingTimecodes[i] = runningSum;
             runningSum += clip.frameCount;
             i++;
         });
 
-        let newClipIndex = min(max(0,(direction ? currentClipIndex+1 : currentClipIndex-1)), clips.length);
+        let newClipIndex = Math.min(Math.max(0,(direction ? currentClipIndex+1 : currentClipIndex-1)), clips.length-1);
 
         playbackData.position = clipStartingTimecodes[newClipIndex];
 
-        this.PUTdata("/transports/playback", playbackData);
+        this.PUTdata("/transports/0/playback", playbackData);
     }
 
     // Sets Timeline / Clip Looping 
