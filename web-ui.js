@@ -333,6 +333,122 @@ function manualAPICall() {
     document.getElementById("manualRequestResponseP").innerHTML = JSON.stringify(response);
 }
 
+/*  Control Calling Functions   */
+/*    Makes the HTML cleaner.   */
+
+function decreaseND() {
+    cameras[ci].setND(cameras[ci].NDStop-2);
+}
+
+function increaseND() {
+    cameras[ci].setND(cameras[ci].NDStop+2);
+}
+
+function decreaseGain() {
+    cameras[ci].setGain(cameras[ci].gain-2);
+}
+
+function increaseGain() {
+    cameras[ci].setGain(cameras[ci].gain+2);
+}
+
+function decreaseShutter() {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed+10});
+    } else {
+        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle-1000});
+    }
+}
+
+function increaseShutter() {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed-10});
+    } else {
+        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle+1000});
+    }
+}
+
+function handleShutterInput(inputString) {
+    let cam = cameras[ci];
+
+    if ('shutterSpeed' in cam.shutter) {
+        if (inputString.indexOf("1/") >= 0) {
+            cam.setShutter({"shutterSpeed" :parseInt(inputString.substring(2))});
+        } else {
+            cam.setShutter({"shutterSpeed" :parseInt(inputString)});
+        }
+        
+    } else {
+        cam.setShutter({"shutterAngle": parseInt(parseFloat(inputString)*100)});
+    }
+}
+
+function decreaseWhiteBalance() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance-50,cameras[ci].WhiteBalanceTint);
+}
+
+function increaseWhiteBalance() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance+50,cameras[ci].WhiteBalanceTint);
+}
+
+function decreaseWhiteBalanceTint() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint-1);
+}
+
+function increaseWhiteBalanceTint() {
+    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint+1);
+}
+
+function AEmodeInputHandler() {
+    let AEmode = document.getElementById("AEmodeDropDown").value;
+    let AEtype = document.getElementById("AEtypeDropDown").value;
+
+    cameras[ci].setAutoExposureMode({mode: AEmode, type: AEtype});
+}
+
+// 0: lift, 1: gamma, 2: gain, 3: offset
+function setCCFromUI(which) {
+    let lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
+    let redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
+    let greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
+    let blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
+    
+    let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
+
+    if (which == 0) {
+        cameras[ci].setCCLift(ccobject);
+    } else if (which == 1) {
+        cameras[ci].setCCGamma(ccobject);
+    } else if (which == 2) {
+        cameras[ci].setCCGain(ccobject);
+    } else {
+        cameras[ci].setCCOffset(ccobject);
+    }
+}
+
+// Reset Color Correction Values
+// 0: lift, 1: gamma, 2: gain, 3: offset, 4: contrast, 5: color & LC
+function resetCC(which) {
+    if (which == 0) {
+        cameras[ci].setCCLift({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 1) {
+        cameras[ci].setCCGamma({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 2) {
+        cameras[ci].setCCGain({"red": 1.0, "green": 1.0, "blue": 1.0, "luma": 1.0});
+    } else if (which == 3) {
+        cameras[ci].setCCOffset({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+    } else if (which == 4) {
+        cameras[ci].setCCContrast({"pivot": 0.5, "adjust": 1.0});
+    } else if (which == 5) {
+        cameras[ci].setCCColor({"hue": 0.0, "saturation": 1.0});
+        cameras[ci].setCCLumaContribuion({"lumaContribution": 1.0});
+    }
+}
+
 /*  Helper Functions   */
 function parseTimecode(timecodeBCD) {
     let noDropFrame = timecodeBCD & 0b01111111111111111111111111111111;     // The first bit of the timecode is 1 if "Drop Frame Timecode" is on. We don't want to include that in the display.
