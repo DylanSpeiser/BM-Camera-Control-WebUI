@@ -219,6 +219,10 @@ input[type=file]:focus {
     margin-right: 1.25vw;
 }
 
+#footerLeft span {
+    margin-left: 1.25vw;
+}
+
 #footerLinks a {
     text-decoration: none;
     color: #e66c01;

@@ -3,7 +3,7 @@ This web app is utilizes the [Blackmagic](https://blackmagicdesign.com) Camera C
 
 >This program was written based on the official REST API documentation from Blackmagic, which can be found [here](https://documents.blackmagicdesign.com/DeveloperManuals/RESTAPIforBlackmagicCameras.pdf)
 
-Using this tool, you can control your Blackmagic studio and cinema cameras *without any extra hardware!* Use it for remote monitoring, color correction, focus pulling, or keeping tabs on your eqiupment. The `BMD-Camera-Control.js` file is also useful if you want to write your own web app using the REST API. More details on how to interface with it can be found below.
+Using this tool, you can control your Blackmagic studio and cinema cameras *without any extra hardware!* Use it for remote monitoring, color correction, focus pulling, or keeping tabs on your eqiupment. The `BMCamera.js` file is also useful if you want to write your own web app using the REST API. More details on how to interface with it can be found below.
 
 ![Screenshot 1](screenshots/WebUI1.png)
 
@@ -74,10 +74,10 @@ If you like this project and want it to improve, consider making a Pull Request 
 ## Tutorials
 For more information about using the BMD REST API, check out [my tutorial series](https://github.com/DylanSpeiser/BM-API-Tutorial/) that explains the basics of how to interact with the camera in JavaScript and Python.
 
-## Using `BMD-Camera-Control.js`
+## Using `BMCamera.js`
 You are more than welcome to use this JavaScript class in your own projects. Just include the file (with its attributions).
 <br><br>
-Cameras are represented as BMDCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument.
+Cameras are represented as BMCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument.
 <br><br>
 After instantiation, the constructor does NOT automatically fetch any data from the camera. This can be done using the `getAllInfo()` method, or the individual getters if you only need a few details. These are all asynchronous and so must be waited upon using `await` or `.then()`. Consult your nearest Google search bar for help implementing asynchronous JavaScript, that's how I did it.
 <br><br>
@@ -86,7 +86,7 @@ Many of setter functions take Objects as arguments, rather than Strings or ints.
 This file is heavily commented so everything _should_ be pretty clear, but let me know in the Issue tracker if you're having trouble.
 
 ## BYOUI
-If you want to use `BMD-Camera-Control.js` in your own UI, there are static references to functions in the BMDCamera class that get called after changing a value. They all look like `updateUIxxxxxx()`. Set these references to point to your UI updating routines in _your_ source file. No need to write them in `BMD-Camera-Control.js`.
+If you want to use `BMCamera.js` in your own UI, there are static references to functions in the BMCamera class that get called after changing a value. They all look like `updateUIxxxxxx()`. Set these references to point to your UI updating routines in _your_ source file. No need to write them in `BMCamera.js`.
 
 # Issues and To-Dos
 ## Known Issues
