@@ -276,7 +276,7 @@
                             <table>
                                 <tr>
                                     <td>Pivot</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CCcontrastPivotRange" oninput="cameras[ci].PUTdata('/colorCorrection/contrast', {pivot: parseFloat(this.value)})"></td>
+                                    <td><input type="range" max="1" min="0" step="0.001" id="CCcontrastPivotRange" oninput="cameras[ci].PUTdata('/colorCorrection/contrast', {pivot: parseFloat(this.value)}); unsavedChanges = unsavedChanges.filter((e) => {return !e.includes('CC4')});"></td>
                                     <td>
                                         <span id="CCcontrastPivotLabel" contenteditable="plaintext-only" onkeydown="CCInputHandler(4)" onmousedown="CCInputHandler(4)">0</span>
                                     </td>
@@ -286,7 +286,7 @@
                                 </tr>
                                 <tr>
                                     <td>Adjust</td>
-                                    <td><input type="range" max="2" min="0" step="0.001" id="CCcontrastAdjustRange" oninput="cameras[ci].PUTdata('/colorCorrection/contrast', {adjust: parseFloat(this.value)})"></td>
+                                    <td><input type="range" max="2" min="0" step="0.001" id="CCcontrastAdjustRange" oninput="cameras[ci].PUTdata('/colorCorrection/contrast', {adjust: parseFloat(this.value)}); unsavedChanges = unsavedChanges.filter((e) => {return !e.includes('CC4')});"></td>
                                     <td>
                                         <span id="CCcontrastAdjustLabel" contenteditable="plaintext-only" onkeydown="CCInputHandler(4)" onmousedown="CCInputHandler(4)">0</span>
                                     </td>
@@ -299,7 +299,7 @@
                             <table>
                                 <tr>
                                     <td>Hue</td>
-                                    <td><input type="range" max="1" min="-1" step="0.001" id="CChueRange" oninput="cameras[ci].PUTdata('/colorCorrection/color', {hue: parseFloat(this.value)})"></td>
+                                    <td><input type="range" max="1" min="-1" step="0.001" id="CChueRange" oninput="cameras[ci].PUTdata('/colorCorrection/color', {hue: parseFloat(this.value)}); unsavedChanges = unsavedChanges.filter((e) => {return !e.includes('CC5')});"></td>
                                     <td>
                                         <span id="CCcolorHueLabel" contenteditable="plaintext-only" onkeydown="CCInputHandler(5)" onmousedown="CCInputHandler(5)">0</span>
                                     </td>
@@ -309,14 +309,14 @@
                                 </tr>
                                 <tr>
                                     <td>Saturation</td>
-                                    <td><input type="range" max="2" min="0" step="0.001" id="CCsaturationRange" oninput="cameras[ci].PUTdata('/colorCorrection/color', {saturation: parseFloat(this.value)})"></td>
+                                    <td><input type="range" max="2" min="0" step="0.001" id="CCsaturationRange" oninput="cameras[ci].PUTdata('/colorCorrection/color', {saturation: parseFloat(this.value)}); unsavedChanges = unsavedChanges.filter((e) => {return !e.includes('CC5')});"></td>
                                     <td>
                                         <span id="CCcolorSatLabel" contenteditable="plaintext-only" onkeydown="CCInputHandler(5)" onmousedown="CCInputHandler(5)">0</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Luma Contribution</td>
-                                    <td><input type="range" max="1" min="0" step="0.001" id="CClumaContributionRange" oninput="cameras[ci].PUTdata('/colorCorrection/lumaContribution', {lumaContribution: parseFloat(this.value)})"></td>
+                                    <td><input type="range" max="1" min="0" step="0.001" id="CClumaContributionRange" oninput="cameras[ci].PUTdata('/colorCorrection/lumaContribution', {lumaContribution: parseFloat(this.value)}); unsavedChanges = unsavedChanges.filter((e) => {return !e.includes('CC5')});"></td>
                                     <td>
                                         <span id="CCcolorLCLabel" contenteditable="plaintext-only" onkeydown="CCInputHandler(5)" onmousedown="CCInputHandler(5)">0</span>
                                     </td>

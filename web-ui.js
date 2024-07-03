@@ -600,6 +600,8 @@ function resetCC(which) {
         cameras[ci].PUTdata("/colorCorrection/color", {"hue": 0.0, "saturation": 1.0});
         cameras[ci].PUTdata("/colorCorrection/lumaContribution", {"lumaContribution": 1.0});
     }
+
+    unsavedChanges = unsavedChanges.filter((e) => {return !e.includes("CC"+which)});
 }
 
 // Triggered by the Loop and Single Clip buttons
