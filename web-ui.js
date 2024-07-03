@@ -14,6 +14,8 @@ var WBMode = 0;         // 0: balance, 1: tint
 
 var defaultControlsHTML;
 
+var unsavedChanges = [];
+
 // Set everything up
 function bodyOnLoad() {
     defaultControlsHTML = document.getElementById("allCamerasContainer").innerHTML;
@@ -81,37 +83,60 @@ function updateUIAll() {
         document.getElementById("cameraControlExpandedHeadContainer").classList.remove("liveCam");
     }
 
+    // ========== Playback Loop State ==========
+    let loopState = cameras[ci].propertyData['/transports/0/playback']?.loop;
+    let singleClipState = cameras[ci].propertyData['/transports/0/playback']?.singleClip;
+
+    let loopButton = document.getElementById("loopButton");
+    let singleClipButton = document.getElementById("singleClipButton");
+
+    if (loopState) {
+        loopButton.classList.add("activated");
+    } else {
+        loopButton.classList.remove("activated");
+    }
+
+    if (singleClipState) {
+        singleClipButton.classList.add("activated");
+    } else {
+        singleClipButton.classList.remove("activated");
+    }
+
     // ========== Timecode ==========
 
     document.getElementById("timecodeLabel").innerHTML = parseTimecode(cameras[ci].propertyData['/transports/0/timecode']?.timecode);
 
     // ========== Presets Dropdown ==========
+
+    if (!unsavedChanges.includes("presets")) {
     
-    var presetsList = document.getElementById("presetsDropDown");
+        var presetsList = document.getElementById("presetsDropDown");
 
-    presetsList.innerHTML = "";
+        presetsList.innerHTML = "";
 
-    cameras[ci].propertyData['/presets']?.presets.forEach((presetItem) => {
-        let presetName = presetItem.split('.', 1);
+        cameras[ci].propertyData['/presets']?.presets.forEach((presetItem) => {
+            let presetName = presetItem.split('.', 1);
 
-        let textNode = document.createTextNode(presetName);
-        let optionNode = document.createElement("option");
-        optionNode.setAttribute("name", "presetOption"+presetName);
-        optionNode.appendChild(textNode);
-        document.getElementById("presetsDropDown").appendChild(optionNode);
-    });
+            let textNode = document.createTextNode(presetName);
+            let optionNode = document.createElement("option");
+            optionNode.setAttribute("name", "presetOption"+presetName);
+            optionNode.appendChild(textNode);
+            document.getElementById("presetsDropDown").appendChild(optionNode);
+        });
 
     // ========== Active Preset ==========
 
-    var presetsList = document.getElementById("presetsDropDown");
+        var presetsList = document.getElementById("presetsDropDown");
 
-    presetsList.childNodes.forEach((child) => {
-        if (child.nodeName == 'OPTION' && child.value == cameras[ci].propertyData['/presets/active']?.preset) {
-            child.selected=true
-        } else {
-            child.selected=false
-        }
-    })
+        presetsList.childNodes.forEach((child) => {
+            if (child.nodeName == 'OPTION' && (child.value+".cset") == cameras[ci].propertyData['/presets/active']?.preset) {
+                child.selected=true
+            } else {
+                child.selected=false
+            }
+        })
+
+    }
 
     // ========== Iris ==========
 
@@ -128,111 +153,137 @@ function updateUIAll() {
     document.getElementById("focusRange").value = cameras[ci].propertyData['/lens/focus']?.normalised;
 
     // ========== ISO ==========
-
-    if (cameras[ci].propertyData['/video/iso'])
-        document.getElementById("ISOInput").value = cameras[ci].propertyData['/video/iso']?.iso;
+    if (!unsavedChanges.includes("ISO")) {
+        if (cameras[ci].propertyData['/video/iso'])
+            document.getElementById("ISOInput").value = cameras[ci].propertyData['/video/iso']?.iso;
+    }
 
     // ========== GAIN ==========
 
-    let gainString = "";
-    let gainInt = cameras[ci].propertyData['/video/gain']?.gain
+    if (!unsavedChanges.includes("Gain")) {
+        let gainString = "";
+        let gainInt = cameras[ci].propertyData['/video/gain']?.gain
 
-    if (gainInt >= 0) {
-        gainString = "+"+gainInt+"db"
-    } else {
-        gainString = gainInt+"db"
+        if (gainInt >= 0) {
+            gainString = "+"+gainInt+"db"
+        } else {
+            gainString = gainInt+"db"
+        }
+
+        document.getElementById("gainSpan").innerHTML = gainString;
     }
-
-    document.getElementById("gainSpan").innerHTML = gainString;
 
     // ========== WHITE BALANCE ===========
 
-    document.getElementById("whiteBalanceSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalance']?.whiteBalance+"K";
-    document.getElementById("whiteBalanceTintSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalanceTint']?.whiteBalanceTint;
+    if (!unsavedChanges.includes("WB")) {
+        document.getElementById("whiteBalanceSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalance']?.whiteBalance+"K";
+    }
+    
+    if (!unsavedChanges.includes("WBT")) {
+        document.getElementById("whiteBalanceTintSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalanceTint']?.whiteBalanceTint;
+    }
 
     // =========== ND =============
 
-    if (cameras[ci].propertyData['/video/ndFilter']) {
-        document.getElementById("ndFilterSpan").innerHTML = cameras[ci].propertyData['/video/ndFilter']?.stop;
-    } else {
-        document.getElementById("ndFilterSpan").innerHTML = 0;
-        document.getElementById("ndFilterSpan").disabled = true;
+    if (!unsavedChanges.includes("ND")) {
+        if (cameras[ci].propertyData['/video/ndFilter']) {
+            document.getElementById("ndFilterSpan").innerHTML = cameras[ci].propertyData['/video/ndFilter']?.stop;
+        } else {
+            document.getElementById("ndFilterSpan").innerHTML = 0;
+            document.getElementById("ndFilterSpan").disabled = true;
+        }
     }
 
     // ============ Shutter =====================
 
-    let shutterString = "SS"
-    let shutterObj = cameras[ci].propertyData['/video/shutter'];
+    if (!unsavedChanges.includes("Shutter")) {
+        let shutterString = "SS"
+        let shutterObj = cameras[ci].propertyData['/video/shutter'];
 
-    if (shutterObj?.shutterSpeed) {
-        shutterString = "1/"+shutterObj.shutterSpeed
-    } else if (shutterObj?.shutterAngle) {
-        var shangleString = (shutterObj.shutterAngle / 100).toFixed(1).toString()
-        if (shangleString.indexOf(".0") > 0) {
-            shutterString = parseFloat(shangleString).toFixed(0)+"°";
-        } else {
-            shutterString = shangleString+"°";
+        if (shutterObj?.shutterSpeed) {
+            shutterString = "1/"+shutterObj.shutterSpeed
+        } else if (shutterObj?.shutterAngle) {
+            var shangleString = (shutterObj.shutterAngle / 100).toFixed(1).toString()
+            if (shangleString.indexOf(".0") > 0) {
+                shutterString = parseFloat(shangleString).toFixed(0)+"°";
+            } else {
+                shutterString = shangleString+"°";
+            }
         }
-    }
 
-    document.getElementById("shutterSpan").innerHTML = shutterString;
+        document.getElementById("shutterSpan").innerHTML = shutterString;
+    }
 
     // =========== Auto Exposure Mode ===========
 
-    let AEmodeSelect = document.getElementById("AEmodeDropDown");
-    let AEtypeSelect = document.getElementById("AEtypeDropDown");
+    if (!unsavedChanges.includes("AutoExposure")) {
+        let AEmodeSelect = document.getElementById("AEmodeDropDown");
+        let AEtypeSelect = document.getElementById("AEtypeDropDown");
 
-    AEmodeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.mode;
-    AEtypeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.type;
+        AEmodeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.mode;
+        AEtypeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.type;
+    }
 
     // =========== COLOR CORRECTION =============
 
     // Lift
-    let liftProps = cameras[ci].propertyData['/colorCorrection/lift'];
-    document.getElementsByClassName("CClumaLabel")[0].innerHTML = liftProps?.luma.toFixed(2);
-    document.getElementsByClassName("CCredLabel")[0].innerHTML = liftProps?.red.toFixed(2);
-    document.getElementsByClassName("CCgreenLabel")[0].innerHTML = liftProps?.green.toFixed(2);
-    document.getElementsByClassName("CCblueLabel")[0].innerHTML = liftProps?.blue.toFixed(2);
+    if (!unsavedChanges.includes("CC0")) {
+        let liftProps = cameras[ci].propertyData['/colorCorrection/lift'];
+        document.getElementsByClassName("CClumaLabel")[0].innerHTML = liftProps?.luma.toFixed(2);
+        document.getElementsByClassName("CCredLabel")[0].innerHTML = liftProps?.red.toFixed(2);
+        document.getElementsByClassName("CCgreenLabel")[0].innerHTML = liftProps?.green.toFixed(2);
+        document.getElementsByClassName("CCblueLabel")[0].innerHTML = liftProps?.blue.toFixed(2);
+    }
 
     // Gamma
-    let gammaProps = cameras[ci].propertyData['/colorCorrection/gamma'];
-    document.getElementsByClassName("CClumaLabel")[1].innerHTML = gammaProps?.luma.toFixed(2);
-    document.getElementsByClassName("CCredLabel")[1].innerHTML = gammaProps?.red.toFixed(2);
-    document.getElementsByClassName("CCgreenLabel")[1].innerHTML = gammaProps?.green.toFixed(2);
-    document.getElementsByClassName("CCblueLabel")[1].innerHTML = gammaProps?.blue.toFixed(2);
+    if (!unsavedChanges.includes("CC1")) {
+        let gammaProps = cameras[ci].propertyData['/colorCorrection/gamma'];
+        document.getElementsByClassName("CClumaLabel")[1].innerHTML = gammaProps?.luma.toFixed(2);
+        document.getElementsByClassName("CCredLabel")[1].innerHTML = gammaProps?.red.toFixed(2);
+        document.getElementsByClassName("CCgreenLabel")[1].innerHTML = gammaProps?.green.toFixed(2);
+        document.getElementsByClassName("CCblueLabel")[1].innerHTML = gammaProps?.blue.toFixed(2);
+    }
 
     // Gain
-    let gainProps = cameras[ci].propertyData['/colorCorrection/gain'];
-    document.getElementsByClassName("CClumaLabel")[2].innerHTML = gainProps?.luma.toFixed(2);
-    document.getElementsByClassName("CCredLabel")[2].innerHTML = gainProps?.red.toFixed(2);
-    document.getElementsByClassName("CCgreenLabel")[2].innerHTML = gainProps?.green.toFixed(2);
-    document.getElementsByClassName("CCblueLabel")[2].innerHTML = gainProps?.blue.toFixed(2);
+    if (!unsavedChanges.includes("CC2")) {
+        let gainProps = cameras[ci].propertyData['/colorCorrection/gain'];
+        document.getElementsByClassName("CClumaLabel")[2].innerHTML = gainProps?.luma.toFixed(2);
+        document.getElementsByClassName("CCredLabel")[2].innerHTML = gainProps?.red.toFixed(2);
+        document.getElementsByClassName("CCgreenLabel")[2].innerHTML = gainProps?.green.toFixed(2);
+        document.getElementsByClassName("CCblueLabel")[2].innerHTML = gainProps?.blue.toFixed(2);
+    }
 
     // Offset
-    let offsetProps = cameras[ci].propertyData['/colorCorrection/offset'];
-    document.getElementsByClassName("CClumaLabel")[3].innerHTML = offsetProps?.luma.toFixed(2);
-    document.getElementsByClassName("CCredLabel")[3].innerHTML = offsetProps?.red.toFixed(2);
-    document.getElementsByClassName("CCgreenLabel")[3].innerHTML = offsetProps?.green.toFixed(2);
-    document.getElementsByClassName("CCblueLabel")[3].innerHTML = offsetProps?.blue.toFixed(2);
+    if (!unsavedChanges.includes("CC3")) {
+        let offsetProps = cameras[ci].propertyData['/colorCorrection/offset'];
+        document.getElementsByClassName("CClumaLabel")[3].innerHTML = offsetProps?.luma.toFixed(2);
+        document.getElementsByClassName("CCredLabel")[3].innerHTML = offsetProps?.red.toFixed(2);
+        document.getElementsByClassName("CCgreenLabel")[3].innerHTML = offsetProps?.green.toFixed(2);
+        document.getElementsByClassName("CCblueLabel")[3].innerHTML = offsetProps?.blue.toFixed(2);
+    }
 
     // Contrast
-    let constrastProps = cameras[ci].propertyData['/colorCorrection/contrast'];
-    document.getElementById("CCcontrastPivotRange").value = constrastProps?.pivot;
-    document.getElementById("CCcontrastPivotLabel").innerHTML = constrastProps?.pivot.toFixed(2);
-    document.getElementById("CCcontrastAdjustRange").value = constrastProps?.adjust;
-    document.getElementById("CCcontrastAdjustLabel").innerHTML = parseInt(constrastProps?.adjust * 50)+"%";
+    if (!unsavedChanges.includes("CC4")) {
+        let constrastProps = cameras[ci].propertyData['/colorCorrection/contrast'];
+        document.getElementById("CCcontrastPivotRange").value = constrastProps?.pivot;
+        document.getElementById("CCcontrastPivotLabel").innerHTML = constrastProps?.pivot.toFixed(2);
+        document.getElementById("CCcontrastAdjustRange").value = constrastProps?.adjust;
+        document.getElementById("CCcontrastAdjustLabel").innerHTML = parseInt(constrastProps?.adjust * 50)+"%";
+    }
     
     // Color
-    let colorProps = cameras[ci].propertyData['/colorCorrection/color'];
-    document.getElementById("CChueRange").value = colorProps?.hue;
-    document.getElementById("CCcolorHueLabel").innerHTML = parseInt((colorProps?.hue + 1) * 180)+"°";
-    
-    document.getElementById("CCsaturationRange").value = colorProps?.saturation;
-    document.getElementById("CCcolorSatLabel").innerHTML = parseInt(colorProps?.saturation * 50)+"%";
+    if (!unsavedChanges.includes("CC5")) {
+        let colorProps = cameras[ci].propertyData['/colorCorrection/color'];
+        document.getElementById("CChueRange").value = colorProps?.hue;
+        document.getElementById("CCcolorHueLabel").innerHTML = parseInt((colorProps?.hue + 1) * 180)+"°";
+        
+        document.getElementById("CCsaturationRange").value = colorProps?.saturation;
+        document.getElementById("CCcolorSatLabel").innerHTML = parseInt(colorProps?.saturation * 50)+"%";
 
-    let lumaContributionProps = cameras[ci].propertyData['/colorCorrection/lumaContribution'];
-    document.getElementById("CClumaContributionRange").value = lumaContributionProps?.lumaContribution;
-    document.getElementById("CCcolorLCLabel").innerHTML = parseInt(lumaContributionProps?.lumaContribution * 100)+"%";
+        let lumaContributionProps = cameras[ci].propertyData['/colorCorrection/lumaContribution'];
+        document.getElementById("CClumaContributionRange").value = lumaContributionProps?.lumaContribution;
+        document.getElementById("CCcolorLCLabel").innerHTML = parseInt(lumaContributionProps?.lumaContribution * 100)+"%";
+    }
 
     // ============ Footer Links ===============
     document.getElementById("documentationLink").href = "http://"+cameras[ci].hostname+"/control/documentation.html";
@@ -337,77 +388,157 @@ function manualAPICall() {
 /*    Makes the HTML cleaner.   */
 
 function decreaseND() {
-    cameras[ci].setND(cameras[ci].NDStop-2);
+    cameras[ci].PUTdata("/video/ndFilter",{stop: cameras[ci].propertyData['/video/ndFilter'].stop-2});
 }
 
 function increaseND() {
-    cameras[ci].setND(cameras[ci].NDStop+2);
+    cameras[ci].PUTdata("/video/ndFilter",{stop: cameras[ci].propertyData['/video/ndFilter'].stop+2});
 }
 
 function decreaseGain() {
-    cameras[ci].setGain(cameras[ci].gain-2);
+    cameras[ci].PUTdata("/video/gain",{gain: cameras[ci].propertyData['/video/gain'].gain-2});
 }
 
 function increaseGain() {
-    cameras[ci].setGain(cameras[ci].gain+2);
+    cameras[ci].PUTdata("/video/gain",{gain: cameras[ci].propertyData['/video/gain'].gain+2});
 }
 
 function decreaseShutter() {
     let cam = cameras[ci];
 
-    if ('shutterSpeed' in cam.shutter) {
-        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed+10});
+    if ('shutterSpeed' in cam.propertyData['/video/shutter']) {
+        cam.PUTdata("/video/shutter", {"shutterSpeed": cam.propertyData['/video/shutter'].shutterSpeed+10});
     } else {
-        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle-1000});
+        cam.PUTdata("/video/shutter", {"shutterAngle": cam.propertyData['/video/shutter'].shutterAngle-1000});
     }
 }
 
 function increaseShutter() {
     let cam = cameras[ci];
 
-    if ('shutterSpeed' in cam.shutter) {
-        cam.setShutter({"shutterSpeed":cam.shutter.shutterSpeed-10});
+    if ('shutterSpeed' in cam.propertyData['/video/shutter']) {
+        cam.PUTdata("/video/shutter", {"shutterSpeed": cam.propertyData['/video/shutter'].shutterSpeed-10});
     } else {
-        cam.setShutter({"shutterAngle": cam.shutter.shutterAngle+1000});
+        cam.PUTdata("/video/shutter", {"shutterAngle": cam.propertyData['/video/shutter'].shutterAngle+1000});
     }
 }
 
-function handleShutterInput(inputString) {
-    let cam = cameras[ci];
+function handleShutterInput() {
+    let inputString = document.getElementById("shutterSpan").innerHTML;
 
-    if ('shutterSpeed' in cam.shutter) {
-        if (inputString.indexOf("1/") >= 0) {
-            cam.setShutter({"shutterSpeed" :parseInt(inputString.substring(2))});
+    if (event.key === 'Enter') {
+        let cam = cameras[ci];
+
+        if ('shutterSpeed' in cam.propertyData['/video/shutter']) {
+            if (inputString.indexOf("1/") >= 0) {
+                cam.PUTdata("/video/shutter", {"shutterSpeed" :parseInt(inputString.substring(2))});
+            } else {
+                cam.PUTdata("/video/shutter", {"shutterSpeed" :parseInt(inputString)});
+            }
+            
         } else {
-            cam.setShutter({"shutterSpeed" :parseInt(inputString)});
+            cam.PUTdata("/video/shutter", {"shutterAngle": parseInt(parseFloat(inputString)*100)});
         }
         
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "Shutter"});
     } else {
-        cam.setShutter({"shutterAngle": parseInt(parseFloat(inputString)*100)});
+        unsavedChanges.push('Shutter');
     }
 }
 
 function decreaseWhiteBalance() {
-    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance-50,cameras[ci].WhiteBalanceTint);
+    cameras[ci].PUTdata("/video/whiteBalance", {whiteBalance: cameras[ci].propertyData['/video/whiteBalance'].whiteBalance-50});
 }
 
 function increaseWhiteBalance() {
-    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance+50,cameras[ci].WhiteBalanceTint);
+    cameras[ci].PUTdata("/video/whiteBalance", {whiteBalance: cameras[ci].propertyData['/video/whiteBalance'].whiteBalance+50});
 }
 
 function decreaseWhiteBalanceTint() {
-    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint-1);
+    cameras[ci].PUTdata("/video/whiteBalanceTint", {whiteBalanceTint: cameras[ci].propertyData['/video/whiteBalanceTint'].whiteBalanceTint-1});
 }
 
 function increaseWhiteBalanceTint() {
-    cameras[ci].setWhiteBalance(cameras[ci].WhiteBalance,cameras[ci].WhiteBalanceTint+1);
+    cameras[ci].PUTdata("/video/whiteBalanceTint", {whiteBalanceTint: cameras[ci].propertyData['/video/whiteBalanceTint'].whiteBalanceTint+1});
+}
+
+function presetInputHandler() {
+    let selectedPreset = document.getElementById("presetsDropDown").value;
+
+    cameras[ci].PUTdata("/presets/active", {preset: selectedPreset+".cset"});
+
+    unsavedChanges = unsavedChanges.filter((e) => {return e !== "presets"});
 }
 
 function AEmodeInputHandler() {
     let AEmode = document.getElementById("AEmodeDropDown").value;
     let AEtype = document.getElementById("AEtypeDropDown").value;
 
-    cameras[ci].setAutoExposureMode({mode: AEmode, type: AEtype});
+    cameras[ci].PUTdata("/video/autoExposure", {mode: AEmode, type: AEtype});
+
+    unsavedChanges = unsavedChanges.filter((e) => {return e !== "AutoExposure"});
+}
+
+function ISOInputHandler() {
+    let ISOInput = document.getElementById("ISOInput");
+
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        cameras[ci].PUTdata("/video/iso", {iso: parseInt(ISOInput.value)})
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "ISO"});
+    } else {
+        unsavedChanges.push('ISO');
+    }
+}
+
+// 0: lift, 1: gamma, 2: gain, 3: offset
+function CCInputHandler(which) {
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        setCCFromUI(which);
+    } else {
+        unsavedChanges.push('CC'+which);
+    }
+}
+
+function NDFilterInputHandler() {
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        cameras[ci].PUTdata("/video/ndFilter", {stop: parseInt(document.getElementById("ndFilterSpan").innerHTML)})
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "ND"});
+    } else {
+        unsavedChanges.push('ND');
+    }
+}
+
+function GainInputHandler() {
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        cameras[ci].PUTdata("/video/gain", {gain: parseInt(document.getElementById("gainSpan").innerHTML)})
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "Gain"});
+    } else {
+        unsavedChanges.push('Gain');
+    }
+}
+
+function WBInputHandler() {
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        cameras[ci].PUTdata("/video/whiteBalance", {whiteBalance: parseInt(document.getElementById("whiteBalanceSpan").innerHTML)})
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "WB"});
+    } else {
+        unsavedChanges.push('WB');
+    }
+}
+
+function WBTInputHandler() {
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        cameras[ci].PUTdata("/video/whiteBalanceTint", {whiteBalanceTint: parseInt(document.getElementById("whiteBalanceTintSpan").innerHTML)})
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "WBT"});
+    } else {
+        unsavedChanges.push('WBT');
+    }
 }
 
 // 0: lift, 1: gamma, 2: gain, 3: offset
@@ -420,33 +551,48 @@ function setCCFromUI(which) {
     let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
 
     if (which == 0) {
-        cameras[ci].setCCLift(ccobject);
+        cameras[ci].PUTdata("/colorCorrection/lift", ccobject);
     } else if (which == 1) {
-        cameras[ci].setCCGamma(ccobject);
+        cameras[ci].PUTdata("/colorCorrection/gamma", ccobject);
     } else if (which == 2) {
-        cameras[ci].setCCGain(ccobject);
+        cameras[ci].PUTdata("/colorCorrection/gain", ccobject);
     } else {
-        cameras[ci].setCCOffset(ccobject);
+        cameras[ci].PUTdata("/colorCorrection/offset", ccobject);
     }
+
+    unsavedChanges = unsavedChanges.filter((e) => {return !e.includes("CC")});
 }
 
 // Reset Color Correction Values
 // 0: lift, 1: gamma, 2: gain, 3: offset, 4: contrast, 5: color & LC
 function resetCC(which) {
     if (which == 0) {
-        cameras[ci].setCCLift({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+        cameras[ci].PUTdata("/colorCorrection/lift", {"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
     } else if (which == 1) {
-        cameras[ci].setCCGamma({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+        cameras[ci].PUTdata("/colorCorrection/gamma", {"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
     } else if (which == 2) {
-        cameras[ci].setCCGain({"red": 1.0, "green": 1.0, "blue": 1.0, "luma": 1.0});
+        cameras[ci].PUTdata("/colorCorrection/gain", {"red": 1.0, "green": 1.0, "blue": 1.0, "luma": 1.0});
     } else if (which == 3) {
-        cameras[ci].setCCOffset({"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
+        cameras[ci].PUTdata("/colorCorrection/offset", {"red": 0.0, "green": 0.0, "blue": 0.0, "luma": 0.0});
     } else if (which == 4) {
-        cameras[ci].setCCContrast({"pivot": 0.5, "adjust": 1.0});
+        cameras[ci].PUTdata("/colorCorrection/contrast", {"pivot": 0.5, "adjust": 1.0});
     } else if (which == 5) {
-        cameras[ci].setCCColor({"hue": 0.0, "saturation": 1.0});
-        cameras[ci].setCCLumaContribuion({"lumaContribution": 1.0});
+        cameras[ci].PUTdata("/colorCorrection/color", {"hue": 0.0, "saturation": 1.0});
+        cameras[ci].PUTdata("/colorCorrection/lumaContribution", {"lumaContribution": 1.0});
     }
+}
+
+// Triggered by the Loop and Single Clip buttons
+function loopHandler(callerString) {
+    let playbackState = cameras[ci].propertyData['/transports/0/playback'];
+    
+    if (callerString === "Loop") {
+        playbackState.loop = !playbackState.loop;
+    } else if (callerString === "Single Clip") {
+        playbackState.singleClip = !playbackState.singleClip;
+    }
+
+    cameras[ci].PUTdata("/transports/0/playback", playbackState);
 }
 
 /*  Helper Functions   */

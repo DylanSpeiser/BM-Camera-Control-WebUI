@@ -383,6 +383,11 @@ h2 {
     margin: 1em 0;
 }
 
+.activated {
+    background: #181818;
+    box-shadow: inset 0 0 1em #090909;
+}
+
 #transportControls .circleButton {
     margin: 0 0.5em;
 }
