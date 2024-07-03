@@ -3,7 +3,9 @@ This web app is utilizes the [Blackmagic](https://blackmagicdesign.com) Camera C
 
 >This program was written based on the official REST API documentation from Blackmagic, which can be found [here](https://documents.blackmagicdesign.com/DeveloperManuals/RESTAPIforBlackmagicCameras.pdf)
 
-Using this tool, you can control your Blackmagic studio and cinema cameras *without any extra hardware!* Use it for remote monitoring, color correction, focus pulling, or keeping tabs on your eqiupment. The `BMCamera.js` file is also useful if you want to write your own web app using the REST API. More details on how to interface with it can be found below.
+Using this tool, you can control your Blackmagic studio and cinema cameras *without any extra hardware!* Use it for remote monitoring, color correction, focus pulling, or keeping tabs on your eqiupment.
+
+The `BMDevice.js` file works on its own if you want to write your own web app using the REST API. If you're interested in an in-depth walkthrough, I have a series of tutorials where I build up this file, step by step, while explaining how each part works. You can find it on my [GitHub page for it](https://github.com/DylanSpeiser/BM-API-Tutorial).
 
 ![Screenshot 1](screenshots/WebUI1.png)
 
@@ -19,16 +21,15 @@ If your camera does not have an ethernet port, use a USB-C to ethernet adapter.
 ![BM Camera Setup](screenshots/BMCameraSetup2.png)
 
 ## Launching the App
-The app is a self-contained, offline web page. (No installation, dependencies, or Node.js installations to worry about!) Simply open the `index.html` file in your browser of choice, enter the hostname of your camera, and press "Connect".
-<br><br>
+The app is a self-contained, offline web page. (No installation, dependencies, or servers to worry about!) Simply open the `index.html` file in your browser of choice, enter the hostname of your camera, and press "Connect".
+
+You can also use the GitHub Pages version of the app, which is linked in the sidebar.
+
 If you don't know the hostname of your camera, you can find and/or change it in **Blackmagic Camera Setup**.
 <br>
 (The hostname is the camera's name with spaces replaced with dashes, and `.local` appended to the end)
 
 # Using the App
-
-### Data Synchronization
-The app polls data from the camera every ten seconds (you'll see "Refreshing..." in the corner). When you change a setting in the browser, it relays that to the camera and verifies the change. If you make a change that reverts after a few seconds, that means the camera rejected it. The page can be manually refreshed with the button in the bottom left corner.
 
 ### Arrows, Buttons, and Text Boxes
 Many controls work with sliders/buttons as well as manual input by clicking on the number and typing in a new value.
@@ -43,6 +44,9 @@ The page allows for the sending of manual API calls to the camera. Use the text 
 Because the app is just a web page, you can open it in multiple browser windows at once. Resize the windows and you can monitor many cameras at the same time!
 
 <img src="screenshots/WebUI2.png" width=30%>
+
+### Data Synchronization
+The app uses WebSockets to keep itself updated with the latest info from the camera. If something has gone wrong, refresh the page.
 
 I have done my best to make the page responsive, but every screen is different. If something looks off, adjust the zoom/scale of the window in your browser and that should fix things.
 
@@ -67,46 +71,68 @@ $^1:$ Unverified best guess <br>
 If any of this information is incorrect, please let me know in the Issues section of this repository.
 
 # The Code
-It's open source, so feel free to modify the code to add new features or suit it to your setup. (Just don't sell it, okay?) It's all vanilla JavaScript and HTML so it's super easy to work with and modify. Fork it and make something cool!
+It's open source, so feel free to modify the code to add new features or suit it to your setup. It's all vanilla JavaScript and HTML so it's super easy to work with and modify. Fork it and make something cool!
 <br><br>
 If you like this project and want it to improve, consider making a Pull Request and I'll give it a look. Or, if coding isn't your thing, open an Issue in the repo's issue tracker.
 
 ## Tutorials
-For more information about using the BMD REST API, check out [my tutorial series](https://github.com/DylanSpeiser/BM-API-Tutorial/) that explains the basics of how to interact with the camera in JavaScript and Python.
+For more information about using the BMD REST API and how I wrote `BMDevice.js`, check out [my tutorial series](https://github.com/DylanSpeiser/BM-API-Tutorial/) that explains the basics of how to interact with the camera in JavaScript and Python.
 
-## Using `BMCamera.js`
+## Using `BMDevice.js`
+
+### Basic Use
 You are more than welcome to use this JavaScript class in your own projects. Just include the file (with its attributions).
-<br><br>
-Cameras are represented as BMCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument.
-<br><br>
-After instantiation, the constructor does NOT automatically fetch any data from the camera. This can be done using the `getAllInfo()` method, or the individual getters if you only need a few details. These are all asynchronous and so must be waited upon using `await` or `.then()`. Consult your nearest Google search bar for help implementing asynchronous JavaScript, that's how I did it.
-<br><br>
-Many of setter functions take Objects as arguments, rather than Strings or ints. Consult the comments and the REST API documentation for details. Many also have integrated waiting periods before fetching the result of the operation and updating the UI. This is to give the camera time to physically respond to the command.
-<br><br>
+
+Cameras are represented as BMCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument. If you are using this file to control a HyperDeck, instantiate it as a `BMDevice` object.
+
+### Updating the UI
+After instantiation, the constructor automatically subscribes to and pulls data from every available WebSocket property. If you don't like this, comment out lines 93-98 of `BMDevice.js`.
+
+Each BMDevice object has an `active` property, whose sole purpose is to enable or disable the calling of `updateUI` after receiving a WebSocket message. By default, `active` is set to `false`. If you have your own UI and want to update it on every `ws.onmessage` event (like I do), after instantiating the device, pass a reference to _your_ UI updating function to `.updateUI` and set `active` to true, like so:
+
+```JS
+cameras[ci] = new BMCamera(hostname);
+
+cameras[ci].updateUI = updateUIAll;
+
+cameras[ci].active = true;
+```
+
+### Accessing Data
+
+The JSON data from the device is stored in the `propertyData` field, indexed by the endpoint it came from. For example, here's how you would access the recording state of a `BMDevice` object named `device`:
+
+```JS
+device.propertyData['/transports/0/record'].recording
+```
+
+Remember to consult the REST API documentation for more information about how this data is stored. Or, look in the developer console for this WebUI. You can access the currently selected camera in my WebUI as `cameras[ci]`.
+
+### Sending Data
+
+Data is sent to the camera with the `PUTdata(endpoint, data)` method. For example:
+
+```JS
+camera.PUTdata("/video/whiteBalance",{whiteBalance: 3200});
+```
+
+`JSON.stringify()` is called on the `data` parameter before sending.
+
 This file is heavily commented so everything _should_ be pretty clear, but let me know in the Issue tracker if you're having trouble.
 
-## BYOUI
-If you want to use `BMCamera.js` in your own UI, there are static references to functions in the BMCamera class that get called after changing a value. They all look like `updateUIxxxxxx()`. Set these references to point to your UI updating routines in _your_ source file. No need to write them in `BMCamera.js`.
-
 # Issues and To-Dos
-## Known Issues
-- Page responsiveness
-- Sometimes the refresh happens while you're typing in a text field and replaces what you've typed
 
-## Unknown Issues
 Please report issues to the repo's issue tracker so I can fix them!
-<br>
+
 If you're having trouble and don't know why, check the browser console.
 
 ## To-Do
-- Use WebSockets instead of polling to keep the page in sync
 - Make a better UI for color correction
 - Add audio settings
 - Add codec/format switching settings
 - Improve responsiveness
 - Improve error handling
 - Save / download preset files to/from the camera
-- Code cleanup (once I learn better web design lol)
 
 ### For License and Copyright details, See `LICENSE.txt`
 (c) 2024 Dylan Speiser

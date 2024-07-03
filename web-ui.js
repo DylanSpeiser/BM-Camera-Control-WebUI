@@ -491,7 +491,7 @@ function ISOInputHandler() {
     }
 }
 
-// 0: lift, 1: gamma, 2: gain, 3: offset
+// 0: lift, 1: gamma, 2: gain, 3: offset, 4: contrast, 5: color & LC
 function CCInputHandler(which) {
     if (event.key === 'Enter') {
         event.preventDefault;
@@ -556,11 +556,24 @@ function setCCFromUI(which) {
         cameras[ci].PUTdata("/colorCorrection/gamma", ccobject);
     } else if (which == 2) {
         cameras[ci].PUTdata("/colorCorrection/gain", ccobject);
-    } else {
+    } else if (which == 3) {
         cameras[ci].PUTdata("/colorCorrection/offset", ccobject);
+    } else if (which == 4) {
+        let pivotFloat = parseFloat(document.getElementById("CCcontrastPivotLabel").innerHTML);
+        let adjustFloat = parseFloat(document.getElementById("CCcontrastAdjustLabel").innerHTML);
+        
+        cameras[ci].PUTdata("/colorCorrection/contrast", {pivot: pivotFloat, adjust: adjustFloat});
+    } else {
+        let hueFloat = parseFloat(document.getElementById("CCcolorHueLabel").innerHTML);
+        let satFloat = parseFloat(document.getElementById("CCcolorSatLabel").innerHTML);
+        let lumCoFloat = parseFloat(document.getElementById("CCcolorLCLabel").innerHTML);
+        
+
+        cameras[ci].PUTdata("/colorCorrection/color", {hue: hueFloat, saturation: satFloat});
+        cameras[ci].PUTdata("/colorCorrection/lumaContribution", {lumaContribution: lumCoFloat});
     }
 
-    unsavedChanges = unsavedChanges.filter((e) => {return !e.includes("CC")});
+    unsavedChanges = unsavedChanges.filter((e) => {return !e.includes("CC"+which)});
 }
 
 // Reset Color Correction Values

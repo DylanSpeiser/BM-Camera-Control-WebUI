@@ -15,7 +15,7 @@
         for more details at LICENSE.txt in this repository.
 */
 
-// Generic Blackmagic Device class
+// Generic Blackmagic Device class, use with HyperDecks.
 class BMDevice {
     // Pretty name and network hostname (strings)
     name;
