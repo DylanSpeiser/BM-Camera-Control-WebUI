@@ -543,12 +543,14 @@ function WBTInputHandler() {
 
 // 0: lift, 1: gamma, 2: gain, 3: offset
 function setCCFromUI(which) {
-    let lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
-    let redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
-    let greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
-    let blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
-    
-    let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
+    if (which < 4) {
+        let lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
+        let redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
+        let greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
+        let blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
+        
+        let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
+    }
 
     if (which == 0) {
         cameras[ci].PUTdata("/colorCorrection/lift", ccobject);
