@@ -544,12 +544,12 @@ function WBTInputHandler() {
 // 0: lift, 1: gamma, 2: gain, 3: offset
 function setCCFromUI(which) {
     if (which < 4) {
-        let lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
-        let redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
-        let greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
-        let blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
+        var lumaFloat = parseFloat(document.getElementsByClassName("CClumaLabel")[which].innerHTML);
+        var redFloat = parseFloat(document.getElementsByClassName("CCredLabel")[which].innerHTML);
+        var greenFloat = parseFloat(document.getElementsByClassName("CCgreenLabel")[which].innerHTML);
+        var blueFloat = parseFloat(document.getElementsByClassName("CCblueLabel")[which].innerHTML);
         
-        let ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
+        var ccobject = {"red": redFloat, "green": greenFloat, "blue": blueFloat, "luma": lumaFloat};
     }
 
     if (which == 0) {
