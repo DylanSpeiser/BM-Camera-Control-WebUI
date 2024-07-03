@@ -128,6 +128,7 @@ If you're having trouble and don't know why, check the browser console.
 
 ## To-Do
 - Make a better UI for color correction
+- Add more functionality to vertical layout
 - Add audio settings
 - Add codec/format switching settings
 - Improve responsiveness
