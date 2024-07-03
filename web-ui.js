@@ -562,13 +562,13 @@ function setCCFromUI(which) {
         cameras[ci].PUTdata("/colorCorrection/offset", ccobject);
     } else if (which == 4) {
         let pivotFloat = parseFloat(document.getElementById("CCcontrastPivotLabel").innerHTML);
-        let adjustFloat = parseFloat(document.getElementById("CCcontrastAdjustLabel").innerHTML);
+        let adjustFloat = parseInt(document.getElementById("CCcontrastAdjustLabel").innerHTML);
         
         cameras[ci].PUTdata("/colorCorrection/contrast", {pivot: pivotFloat, adjust: adjustFloat});
     } else {
-        let hueFloat = parseFloat(document.getElementById("CCcolorHueLabel").innerHTML);
-        let satFloat = parseFloat(document.getElementById("CCcolorSatLabel").innerHTML);
-        let lumCoFloat = parseFloat(document.getElementById("CCcolorLCLabel").innerHTML);
+        let hueFloat = parseInt(document.getElementById("CCcolorHueLabel").innerHTML);
+        let satFloat = parseInt(document.getElementById("CCcolorSatLabel").innerHTML);
+        let lumCoFloat = parseInt(document.getElementById("CCcolorLCLabel").innerHTML);
         
 
         cameras[ci].PUTdata("/colorCorrection/color", {hue: hueFloat, saturation: satFloat});
