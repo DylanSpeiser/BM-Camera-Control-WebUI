@@ -574,7 +574,7 @@ function setCCFromUI(which) {
         
         let hueFloat = (hueInt/180) - 1.0;
         let satFloat = satInt/50;
-        let lumCoFloat = lumCoInt/50;
+        let lumCoFloat = lumCoInt/100;
 
         cameras[ci].PUTdata("/colorCorrection/color", {hue: hueFloat, saturation: satFloat});
         cameras[ci].PUTdata("/colorCorrection/lumaContribution", {lumaContribution: lumCoFloat});
