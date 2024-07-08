@@ -1,5 +1,5 @@
 # BM Camera Control WebUI
-This web app is utilizes the [Blackmagic](https://blackmagicdesign.com) Camera Control REST API to control cameras with a vanilla JS web interface. Modeled after the interface of ATEM Software Control, most of the camera's functions that can be controlled by the API are available here.
+This web app utilizes the [Blackmagic](https://blackmagicdesign.com) Camera Control REST API to control cameras with a vanilla JS web interface. Modeled after the interface of ATEM Software Control, most of the camera's functions that can be controlled by the API are available here.
 
 >This program was written based on the official REST API documentation from Blackmagic, which can be found [here](https://documents.blackmagicdesign.com/DeveloperManuals/RESTAPIforBlackmagicCameras.pdf)
 
