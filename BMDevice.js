@@ -52,7 +52,7 @@ class BMDevice {
         this.name = this.hostname.replace(".local","").replaceAll("-"," ");
 
         // Initialize WebSocket
-        this.ws = new WebSocket("ws://"+hostname+"/control/api/v1/event/websocket");
+        this.ws = new WebSocket((this.useHTTPS ? "wss://" : "ws://")+hostname+"/control/api/v1/event/websocket");
 
         // Get a self object for accessing within callback fns
         var self = this;
