@@ -190,9 +190,9 @@ class BMDevice {
 // Child Class Specifically for Cameras
 class BMCamera extends BMDevice {
     // Child class constructor
-    // Just passing the hostname to the superclass's constructor
-    constructor(hostname) {
-        super(hostname);
+    // Just passing the hostname and security to the superclass's constructor
+    constructor(hostname, secure=false) {
+        super(hostname, secure);
     }
 
     // Sets the white balance and tint based on the following preset:

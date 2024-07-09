@@ -85,7 +85,9 @@ For more information about using the BMD REST API and how I wrote `BMDevice.js`,
 ### Basic Use
 You are more than welcome to use this JavaScript class in your own projects. Just include the file (with its attributions).
 
-Cameras are represented as BMCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument. If you are using this file to control a HyperDeck, instantiate it as a `BMDevice` object.
+Cameras are represented as BMCamera objects, instantiated with the `new` keyword and the constructor, which takes the hostname as a String argument. The constructor also (optionally) takes another boolean argument for whether or not to use HTTPS and WSS requests rather than their unsecre counterparts. In order to use the secure protocols, you must generate a certificate in **Blackmagic Camera Setup**.
+
+If you are using this file to control a HyperDeck, instantiate it as a `BMDevice` object.
 
 ### Updating the UI
 After instantiation, the constructor automatically subscribes to and pulls data from every available WebSocket property. If you don't like this, comment out lines 93-98 of `BMDevice.js`.
