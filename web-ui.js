@@ -26,14 +26,15 @@ function bodyOnLoad() {
 function initCamera() {
     // Get hostname from Hostname text field
     let hostname = document.getElementById("hostnameInput").value;
+    let security = document.getElementById("secureCheckbox").checked;
 
     try {
         // Check if the hostname is valid
-        let response = sendRequest("GET", "http://"+hostname+"/control/api/v1/system","");
+        let response = sendRequest("GET", (security ? "https://" : "http://")+hostname+"/control/api/v1/system","");
 
         if (response.status < 300) {
             // Success, make a new camera, get all relevant info, and populate the UI
-            cameras[ci] = new BMCamera(hostname);
+            cameras[ci] = new BMCamera(hostname, security);
 
             cameras[ci].updateUI = updateUIAll;
 
@@ -286,8 +287,8 @@ function updateUIAll() {
     }
 
     // ============ Footer Links ===============
-    document.getElementById("documentationLink").href = "http://"+cameras[ci].hostname+"/control/documentation.html";
-    document.getElementById("mediaManagerLink").href = "http://"+cameras[ci].hostname;
+    document.getElementById("documentationLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname+"/control/documentation.html";
+    document.getElementById("mediaManagerLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname;
 }
 
 

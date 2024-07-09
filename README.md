@@ -20,6 +20,8 @@ If your camera does not have an ethernet port, use a USB-C to ethernet adapter.
 
 ![BM Camera Setup](screenshots/BMCameraSetup2.png)
 
+> If you're using the GitHub Pages site, the API must be accessed with HTTPS rather than HTTP. You can enable this on the camera in **Blackmagic Camera Setup** by clicking the "Generate Certificate" button.
+
 ## Launching the App
 The app is a self-contained, offline web page. (No installation, dependencies, or servers to worry about!) Simply open the `index.html` file in your browser of choice, enter the hostname of your camera, and press "Connect".
 

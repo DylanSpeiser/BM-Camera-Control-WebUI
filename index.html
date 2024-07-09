@@ -196,6 +196,8 @@
                                     <td>
                                         <input type="text" placeholder="Studio-Camera-6K-Pro.local" id="hostnameInput">
                                         <button onclick="initCamera()">Connect</button>
+                                        <input type="checkbox" id="secureCheckbox">
+                                        <span id="secureCheckboxLabel">Use HTTPS</span>
                                         <span id="connectionErrorSpan"></span>
                                     </td>
                                 </tr>
@@ -331,7 +333,7 @@
         <!-- Footer Div -->
         <div class="flexContainerH" id="footerContainer">
             <div id="footerLeft">
-                <span class="">(v 1.1)</span>
+                <span class="">(v 1.2)</span>
                 <span id="activeElementSpan"></span>
             </div>
             <div id="footerLinks">

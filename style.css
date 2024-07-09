@@ -131,6 +131,10 @@ input[type=file]:focus {
     border: 1px solid rgb(150, 58, 0);
 }
 
+#secureCheckboxLabel {
+    margin-right: 1vw;
+}
+
 /* Horizontal Container Styles */
 #headerContainer {
     background: #181818;

@@ -22,6 +22,9 @@ class BMDevice {
     hostname;
     APIAddress;
 
+    // Are we using HTTPS?
+    useHTTPS;
+
     // WebSocket items
     ws;
     availableProperties;
@@ -39,10 +42,13 @@ class BMDevice {
     updateUI() {};
 
     // ============= CONSTRUCTOR ================
-    constructor(hostname) {
+    constructor(hostname, secure=false) {
+        // Set Security
+        this.useHTTPS = secure;
+
         // Set name properties
         this.hostname = hostname;
-        this.APIAddress = "http://"+hostname+"/control/api/v1";
+        this.APIAddress = (this.useHTTPS ? "https://" : "http://")+hostname+"/control/api/v1";
         this.name = this.hostname.replace(".local","").replaceAll("-"," ");
 
         // Initialize WebSocket
