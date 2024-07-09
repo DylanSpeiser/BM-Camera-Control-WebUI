@@ -52,6 +52,7 @@ function initCamera() {
         document.getElementById("connectionErrorSpan").innerHTML = "Error "+error.code+": "+error.name+" (Your hostname is probably incorrect, hover for more details)";
     }
 
+    unsavedChanges = unsavedChanges.filter((e) => {return e !== "Hostname"});
 }
 
 // =============================== UI Updater ==================================
@@ -64,7 +65,9 @@ function updateUIAll() {
 
     // ========== Hostname ==========
 
-    document.getElementById("hostnameInput").value = cameras[ci].hostname;
+    if (!unsavedChanges.includes("Hostname")) {
+        document.getElementById("hostnameInput").value = cameras[ci].hostname;
+    }
 
     // ========== Format ==========
 
@@ -469,6 +472,18 @@ function presetInputHandler() {
     cameras[ci].PUTdata("/presets/active", {preset: selectedPreset+".cset"});
 
     unsavedChanges = unsavedChanges.filter((e) => {return e !== "presets"});
+}
+
+function hostnameInputHandler() {
+    let newHostname = document.getElementById("hostnameInput").value;
+
+    if (event.key === 'Enter') {
+        event.preventDefault;
+        unsavedChanges = unsavedChanges.filter((e) => {return e !== "Hostname"});
+        initCamera();
+    } else {
+        unsavedChanges.push('Hostname');
+    }
 }
 
 function AEmodeInputHandler() {

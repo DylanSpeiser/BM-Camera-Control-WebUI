@@ -194,7 +194,7 @@
                                 <tr>
                                     <td>Hostname</td>
                                     <td>
-                                        <input type="text" placeholder="Studio-Camera-6K-Pro.local" id="hostnameInput">
+                                        <input type="text" placeholder="Studio-Camera-6K-Pro.local" id="hostnameInput" onclick="hostnameInputHandler()" onkeydown="hostnameInputHandler()">
                                         <button onclick="initCamera()">Connect</button>
                                         <input type="checkbox" id="secureCheckbox">
                                         <span id="secureCheckboxLabel">Use HTTPS</span>
