@@ -1,6 +1,8 @@
 # BM Camera Control WebUI
 This web app utilizes the [Blackmagic](https://blackmagicdesign.com) Camera Control REST API to control cameras with a vanilla JS web interface. Modeled after the interface of ATEM Software Control, most of the camera's functions that can be controlled by the API are available here.
 
+Note that this is a tech demo, and may not be suitable for production use.
+
 >This program was written based on the official REST API documentation from Blackmagic, which can be found [here](https://documents.blackmagicdesign.com/DeveloperManuals/RESTAPIforBlackmagicCameras.pdf)
 
 Using this tool, you can control your Blackmagic studio and cinema cameras *without any extra hardware!* Use it for remote monitoring, color correction, focus pulling, or keeping tabs on your eqiupment.
