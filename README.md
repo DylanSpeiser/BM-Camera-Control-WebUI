@@ -64,7 +64,7 @@ This app (as of June 2024), should be compatible with the following Blackmagic c
 | Pocket Cinema Camera 6K Pro | `Pocket-Cinema-Camera-6K-Pro.local` | FW 8.6+ Required |
 | Cinema Camera 6K | `Blackmagic-Cinema-Camera-6K.local` | |
 | URSA Broadcast G2 | `URSA-Broadcast-G2.local` | |
-| Micro Studio Camera 4K G2 | `Micro-Studio-Camera-4K-G2.local`$^1$ | |
+| Micro Studio Camera 4K G2 | `Micro-Studio-Camera-4K-G2.local` | |
 | Studio Camera 4K Plus | `Studio-Camera-4K-Plus.local` | |
 | Studio Camera 4K Pro | `Studio-Camera-4K-Pro.local` | |
 | Studio Camera 4K Plus G2 | `Studio-Camera-4K-Plus-G2.local`$^1$ | |
