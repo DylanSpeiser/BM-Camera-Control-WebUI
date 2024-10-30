@@ -49,6 +49,9 @@ Because the app is just a web page, you can open it in multiple browser windows 
 
 <img src="screenshots/WebUI2.png" width=30%>
 
+### Tablet Screens
+If you're having trouble seeing the bottom of the controls because of the footer (which can happen on tablets), just tap on the footer bar to hide it. Tap on the header bar to bring the footer back.
+
 ### Data Synchronization
 The app uses WebSockets to keep itself updated with the latest info from the camera. If something has gone wrong, refresh the page.
 

@@ -20,7 +20,7 @@
         <!------ Page Content ------>
 
         <!-- Header Div -->
-        <div class="flexContainerH" id="headerContainer">
+        <div class="flexContainerH" id="headerContainer" onclick="document.getElementById('footerContainer').style.display='flex'">
             <h1>Camera Control WebUI for Blackmagic Cameras</h1>
         </div>
 
@@ -334,9 +334,9 @@
         </div>
 
         <!-- Footer Div -->
-        <div class="flexContainerH" id="footerContainer">
+        <div class="flexContainerH" id="footerContainer" onclick="this.style.display='none'">
             <div id="footerLeft">
-                <span class="">(v 1.4.1)</span>
+                <span class="">(v 1.4.2)</span>
                 <span id="activeElementSpan"></span>
             </div>
             <div id="footerLinks">
