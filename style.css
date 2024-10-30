@@ -3,17 +3,27 @@
 /* ============= WHOLE PAGE STYLES ================== */
 
 /* Handle vertical screens */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) and (orientation: portrait) {
     #cameraControlsContainer {
         width: 100vw!important;
     }
 
     #cameraControlsContainerExpanded {
-        display: none;
+        display: none!important;
     }
 
     body {
-        font-size: 90%;
+        font-size: 125%;
+    }
+}
+
+@media screen and (max-width: 1400px) and (orientation: landscape) {
+    #cameraControlsContainer {
+        width: 30vw!important;
+    }
+    
+    body {
+        font-size: 70%;
     }
 }
 
