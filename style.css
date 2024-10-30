@@ -21,6 +21,10 @@
     #cameraControlsContainer {
         width: 30vw!important;
     }
+
+    #headerContainer {
+        height: 5vh!important;
+    }
     
     body {
         font-size: 70%;
