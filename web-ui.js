@@ -11,14 +11,36 @@ var ci = 0;             // Index into this array for the currently selected came
 // cameras[ci] is used to reference the currently selected camera object
 
 var WBMode = 0;         // 0: balance, 1: tint
+let PreviewCam = -1;    // which camera to use for preview. -1: none
+let currentStream;      // current preview USB webcam stream
+
 
 var defaultControlsHTML;
 
 var unsavedChanges = [];
 
 // Set everything up
-function bodyOnLoad() {
+async function bodyOnLoad() {
     defaultControlsHTML = document.getElementById("allCamerasContainer").innerHTML;
+    try {
+	await navigator.mediaDevices.getUserMedia({ video: true });
+    } catch (err) {
+	console.error("Error acessing video devices:", err);
+    }
+    try {
+	const devices = await navigator.mediaDevices.enumerateDevices();
+	const videoDevices = devices.filter(device => device.kind === 'videoinput');
+	const select = document.getElementById('webcamSelect');
+        videoDevices.forEach((device, index) => {
+            const option = document.createElement('option');
+            // Use the device label if available; if not, fallback to a generic name.
+            option.text = device.label || `Camera ${index + 1}`;
+            option.value = device.deviceId;
+            select.appendChild(option);
+        });
+    } catch (err) {
+        console.error("Error enumerating devices:", err);
+    }
 }
 
 // Checks the hostname, if it replies successfully then a new BMCamera object
@@ -633,6 +655,27 @@ function loopHandler(callerString) {
     cameras[ci].PUTdata("/transports/0/playback", playbackState);
 }
 
+async function SelectPreviewCamera() {
+    let previewcam = document.getElementById('webcamSelect').value;
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+
+    const constraints = {
+	video: {
+	    deviceId: previewcam ? { exact: previewcam } : undefined
+	}
+    };
+    try {
+	currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+	const video = document.getElementById('videopreview');
+	video.srcObject = currentStream;
+    } catch (err) {
+	console.error("Error starting video stream:", err);
+    }
+}
+
+
 /*  Helper Functions   */
 function parseTimecode(timecodeBCD) {
     let noDropFrame = timecodeBCD & 0b01111111111111111111111111111111;     // The first bit of the timecode is 1 if "Drop Frame Timecode" is on. We don't want to include that in the display.
@@ -641,3 +684,4 @@ function parseTimecode(timecodeBCD) {
     let finalTCString = decimalTCString.match(/.{1,2}/g).join(':');         // Put colons between every two characters
     return finalTCString;
 }
+
