@@ -191,6 +191,14 @@
                     </div>
 
                     <div class="flexContainerV" id="cameraControlExpandedBodyContainer">
+		      <div id="videocontainer">
+			<video autoplay="true" id="videopreview">
+	
+			</video>
+			  <select id="webcamSelect" onchange="SelectPreviewCamera()">
+                             <option value="-1">--Select a webcam--</option>
+                          </select>
+		      </div>
                         <div class="tableControl">
                             <h3>Connection</h3>
                             <table>

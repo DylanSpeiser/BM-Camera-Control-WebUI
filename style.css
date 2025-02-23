@@ -468,3 +468,24 @@ table, td {
 td, tr {
     align-items: center;
 }
+
+/* video preview */
+
+#videocontainer {
+    width: 400px;
+    height: 250px;
+    background: white;
+    position: absolute;
+    left: 800px;	   
+}
+
+#videopreview {
+    
+}
+
+
+#webcamSelect {
+    top: -160px;
+    position: relative;
+    left: -300px;
+}
