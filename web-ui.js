@@ -19,7 +19,13 @@ var unsavedChanges = [];
 // Set everything up
 function bodyOnLoad() {
     defaultControlsHTML = document.getElementById("allCamerasContainer").innerHTML;
+    // prefill camera hostname (or IP address)
+    document.getElementById("hostnameInput").value = localStorage.getItem("camerahostname_"+ci.toString());
+    if ( localStorage.getItem("camerasecurity_"+ci.toString()) === 'true' ) {
+	document.getElementById("secureCheckbox").checked = true
+    }
 }
+
 
 // Checks the hostname, if it replies successfully then a new BMCamera object
 //  is made and gets put in the array at ind
@@ -35,13 +41,16 @@ function initCamera() {
         if (response.status < 300) {
             // Success, make a new camera, get all relevant info, and populate the UI
             cameras[ci] = new BMCamera(hostname, security);
-
+            // Save camera hostname and security status in local storage
+	    localStorage.setItem("camerahostname_"+ci, hostname)
+	    localStorage.setItem("camerasecurity_"+ci, security)
             cameras[ci].updateUI = updateUIAll;
 
             cameras[ci].active = true;
 
             document.getElementById("connectionErrorSpan").innerHTML = "Connected.";
             document.getElementById("connectionErrorSpan").setAttribute("style","color: #6e6e6e;");
+	    
         } else {
             // Something has gone wrong, tell the user
             document.getElementById("connectionErrorSpan").innerHTML = response.statusText;
@@ -320,7 +329,10 @@ function switchCamera(index) {
 
     document.getElementById("cameraNumberLabel").innerHTML = "CAM"+(ci+1);
     document.getElementById("cameraName").innerHTML = "CAMERA NAME";
-
+    document.getElementById("hostnameInput").value = localStorage.getItem("camerahostname_"+ci.toString());
+    if ( localStorage.getItem("camerasecurity_"+ci.toString()) === 'true' ) {
+	document.getElementById("secureCheckbox").checked = true
+    }    
     if (cameras[ci]) {
         cameras[ci].active = true;
     }
@@ -476,7 +488,7 @@ function presetInputHandler() {
 
 function hostnameInputHandler() {
     let newHostname = document.getElementById("hostnameInput").value;
-
+    
     if (event.key === 'Enter') {
         event.preventDefault;
         unsavedChanges = unsavedChanges.filter((e) => {return e !== "Hostname"});
