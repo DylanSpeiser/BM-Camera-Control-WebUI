@@ -145,6 +145,7 @@ If you're having trouble and don't know why, check the browser console.
 - Save / download preset files to/from the camera
 
 ### For License and Copyright details, See `LICENSE.txt`
-(c) 2024 Dylan Speiser
+First made in 2024 by Dylan Speiser
+Big thank you to all contributors!
 <br>
 Licensed under the GNU General Public License
